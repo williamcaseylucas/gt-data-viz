@@ -1,0 +1,133 @@
+@import 'https://unpkg.com/open-props';
+@import 'https://unpkg.com/open-props/normalize.min.css';
+@import 'https://unpkg.com/open-props/buttons.min.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;1,200;1,500&display=swap');
+
+:root {
+	--nav-height: 80px;
+	--container: 1580px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Poppins', sans-serif;
+}
+
+html {
+	/* scroll-behavior: smooth; */
+}
+
+a {
+	text-decoration: none;
+}
+
+.cards-flex {
+	display: flex;
+	align-items: start;
+	justify-content: center;
+	margin-inline: auto;
+	text-align: center;
+	gap: 4rem;
+	width: var(--container);
+	margin-block: 15px;
+}
+
+.cards-flex h2 {
+	margin-bottom: 5px;
+}
+
+.cards {
+	display: flex;
+	justify-content: space-around;
+	margin-inline: auto;
+	margin-block: 15px;
+	/* width: 75%; */
+	width: var(--container);
+}
+
+.two-cards h2,
+.three-cards h2 {
+	margin-bottom: 10px;
+	text-align: center;
+	margin-inline: auto;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	/* min-width: 800px; */
+	/* flex-basis: 1000px; */
+	width: var(--container);
+	margin-inline: auto;
+	margin-block: 15px;
+
+	padding: 3rem;
+}
+
+.content > * {
+	/* display: block; */
+	text-align: center;
+	width: 80%;
+	/* margin-inline: auto; */
+}
+
+.content h1,
+.content h2,
+.content h3 {
+	display: inline-block;
+	min-width: 80%;
+	margin-block: 15px;
+}
+
+.content p,
+.content b {
+	/* font-size: 1.5rem; */
+	font-weight: 200;
+	margin-bottom: 30px;
+}
+
+table {
+	/* width: 100%; */
+	margin-inline: auto;
+	margin-bottom: 15px;
+}
+
+td {
+	font-weight: 200;
+}
+
+th,
+td {
+	padding: 12px 15px;
+}
+
+.card {
+	/* flex-basis adds consistency to all blocks */
+	/* flex-basis: var(--size-content-1); */
+	text-align: left !important;
+	/* font-size: 1rem !important; */
+	display: inline-block !important;
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-2);
+	background: var(--surface-3);
+	border: 1px solid var(--surface-1);
+	padding: var(--size-4);
+	border-radius: var(--radius-3);
+	box-shadow: var(--shadow-2);
+}
+
+.card a {
+	display: inline-block;
+}
+
+p.card {
+	margin-inline: auto;
+}
