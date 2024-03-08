@@ -3,8 +3,40 @@
   import * as d3 from "d3";
   import { line_height, line_margin, line_width } from ".";
   let svgRef;
-  onMount(() => {
+
+  const rate_states = [
+    "Data.Rates.Property.All",
+    "Data.Rates.Property.Burglary",
+    "Data.Rates.Property.Larceny",
+    "Data.Rates.Property.Motor",
+    "Data.Rates.Violent.All",
+    "Data.Rates.Violent.Assault",
+    "Data.Rates.Violent.Murder",
+    "Data.Rates.Violent.Rape",
+    "Data.Rates.Violent.Robbery",
+  ];
+
+  const titleMap = {
+    "Data.Rates.Property.All": "Total Average Crime Rate",
+    "Data.Rates.Property.Burglary": "Total Average Burglary Rate",
+    "Data.Rates.Property.Larceny": "Total Average Larceny Rate",
+    "Data.Rates.Property.Motor": "Total Average Motor Rate",
+    "Data.Rates.Violent.All": "Total Average Violent Crime Rate",
+    "Data.Rates.Violent.Assault": "Total Average Violent Assault Rate",
+    "Data.Rates.Violent.Murder": "Total Average Violent Murder Rate",
+    "Data.Rates.Violent.Rape": "Total Average Violent Rape Rate",
+    "Data.Rates.Violent.Robbery": "Total Average Violent Robbery Rate",
+  };
+  let selected = rate_states[0];
+  // $: selected = rate_states[0];
+  $: console.log("selected: ", selected);
+
+  const mainFunc = (select) => {
+    console.log("Ran again");
     var main = d3.select(svgRef);
+    // Refresh each time this is called
+    main.selectAll("*").remove();
+
     const lineChartSvg = main
       .append("svg")
       .attr("width", line_width + line_margin.left + line_margin.right)
@@ -14,13 +46,14 @@
     d3.csv(
       "https://raw.githubusercontent.com/fuyuGT/CS7450-data/main/state_crime.csv"
     ).then(function (data) {
+      // (v) => d3.mean(v, (d) => +d["Data.Rates.Property.All"]),
       const state_group = d3.rollup(
         data,
-        (v) => d3.mean(v, (d) => +d["Data.Rates.Property.All"]),
+        (v) => d3.mean(v, (d) => +d[select]),
         (d) => d.State,
         (d) => d.Year
       );
-      console.log(state_group);
+      console.log("Line data: ", state_group);
 
       const lineChartWidth = 500,
         lineChartHeight = 400;
@@ -53,8 +86,8 @@
       const yScale = d3
         .scaleLinear()
         .domain([
-          d3.min(data, (d) => +d["Data.Rates.Property.All"]),
-          d3.max(data, (d) => +d["Data.Rates.Property.All"]),
+          d3.min(data, (d) => +d[select]),
+          d3.max(data, (d) => +d[select]),
         ])
         .range([lineChartHeight, 0]);
 
@@ -67,7 +100,7 @@
         .attr("transform", "rotate(-90)")
         .attr("y", -45)
         .attr("x", 0 - lineChartHeight / 2)
-        .text("Total Average Crime Rate");
+        .text(titleMap[select]);
 
       // Define the line generator
       let line = d3
@@ -126,9 +159,40 @@
         .attr("r", 4)
         .style("fill", (d) => colorScale(d));
     });
-  });
+  };
+
+  onMount(() => mainFunc(selected));
+
+  // Will rerun function every time you change the selected state
+  $: mainFunc(selected);
 </script>
 
 <div class="wrapper">
   <div id="main" bind:this={svgRef}></div>
+  <select bind:value={selected}>
+    {#each rate_states as state}
+      <option value={state}>
+        {state}
+      </option>
+    {/each}
+  </select>
 </div>
+
+<style>
+  :root {
+    --select-border: #777;
+    --select-focus: blue;
+    --select-arrow: var(--select-border);
+  }
+  select {
+    width: 100%;
+    border: 1px solid var(--select-border);
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1.1;
+    background-color: #f3f3f3;
+    background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+  }
+</style>
