@@ -3,9 +3,39 @@
   import { onMount } from "svelte";
   import { bar_height, bar_margin, bar_width } from ".";
   let svgRef;
+  let x, y;
 
-  onMount(() => {
+  const maxBarHeight = 200;
+  const barChartWidth = 800;
+
+  const invertScale = (val) => {
+    const domain = x.domain();
+    const paddingOuter = x(domain[0]);
+    const eachBand = x.step();
+    const index = Math.floor((val - paddingOuter) / eachBand);
+    return Math.max(0, Math.min(index, domain.length - 1)); // gives indicies
+    // return domain[Math.max(0, Math.min(index, domain.length - 1))]; // gives start and end state
+  };
+
+  $: selection = [0, 10];
+
+  $: brush = d3
+    .brushX()
+    .extent([
+      [0, 0],
+      [bar_width, bar_height],
+    ])
+    .on("start brush end", (e) => {
+      if (e.selection) {
+        console.log("event", e, " ", e.selection.map(invertScale));
+      }
+    });
+
+  $: if (brush) mainFunc(brush);
+
+  const mainFunc = (brush) => {
     var main = d3.select(svgRef);
+    main.selectAll("*").remove();
     const barChartSvg = main
       .append("svg")
       .attr("width", bar_width + bar_margin.left + bar_margin.right)
@@ -17,8 +47,6 @@
       "https://raw.githubusercontent.com/fuyuGT/CS7450-data/main/state_crime.csv"
     ).then(function (data) {
       // Bars
-      const maxBarHeight = 200;
-      const barChartWidth = 800;
 
       let barChart = barChartSvg
         .append("g")
@@ -32,7 +60,7 @@
       );
       console.log("bar data", state_data);
 
-      const x = d3
+      x = d3
         .scaleBand()
         .range([0, barChartWidth])
         .domain(data.map((d) => d.State))
@@ -40,7 +68,7 @@
 
       let yMax = d3.max(state_data.values());
 
-      const y = d3.scaleLinear().domain([0, yMax]).range([maxBarHeight, 0]);
+      y = d3.scaleLinear().domain([0, yMax]).range([maxBarHeight, 0]);
 
       barChart
         .selectAll(".myBar")
@@ -87,8 +115,19 @@
         .attr("class", "my-title")
         .attr("transform", `translate(200,-10)`)
         .text("Average Murder Rate Across States from 1960 to 2015");
+
+      // Add brush
+      barChart
+        .append("g")
+        .call(brush)
+        .call(
+          brush.move,
+          selection.map((v) => x(v))
+        );
     });
-  });
+  };
+
+  onMount(() => mainFunc(brush));
 </script>
 
 <div class="wrapper">

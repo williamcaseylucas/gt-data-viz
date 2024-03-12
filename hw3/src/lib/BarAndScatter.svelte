@@ -5,7 +5,7 @@
 
 <div>
   <Bar />
-  <Scatter />
+  <!-- <Scatter /> -->
 </div>
 
 <style>
