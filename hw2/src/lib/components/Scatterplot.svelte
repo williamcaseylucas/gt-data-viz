@@ -1,4 +1,4 @@
-<script lang="ts">
+									<script lang="ts">
 	import * as d3 from 'd3';
 	import { csvData } from '$lib';
 	import AxisX from './AxisX.svelte';
