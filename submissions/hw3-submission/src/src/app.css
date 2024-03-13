@@ -1,0 +1,25 @@
+text.my-axis-label {
+  font-family: Roboto;
+  font-size: 12px;
+}
+
+text.my-title {
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+text.my-legend {
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: bold;
+}
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main {
+  background: rgb(253, 240, 242);
+}
