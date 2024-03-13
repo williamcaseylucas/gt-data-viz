@@ -1,8 +1,17 @@
 <script lang="ts">
+  export let dropDown;
+  export let useStore;
+  import { states_of_interest } from ".";
   import { onMount } from "svelte";
   import * as d3 from "d3";
   import { line_height, line_margin, line_width } from ".";
   let svgRef;
+
+  // States and their respective colors
+  $: states = ["California", "Colorado", "Florida", "Georgia", "Indiana"];
+  // $: console.log($states_of_interest, useStore);
+  $: if ($states_of_interest != null && useStore) states = $states_of_interest;
+  const colors = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854"];
 
   const rate_states = [
     "Data.Rates.Property.All",
@@ -28,19 +37,16 @@
     "Data.Rates.Violent.Robbery": "Total Average Violent Robbery Rate",
   };
   let selected = rate_states[0];
-  // $: selected = rate_states[0];
-  $: console.log("selected: ", selected);
 
-  const mainFunc = (select) => {
-    console.log("Ran again");
+  const mainFunc = (select, states) => {
     var main = d3.select(svgRef);
     // Refresh each time this is called
     main.selectAll("*").remove();
 
     const lineChartSvg = main
       .append("svg")
-      .attr("width", line_width + line_margin.left + line_margin.right)
-      .attr("height", line_height + line_margin.top + line_margin.bottom);
+      .attr("width", line_width)
+      .attr("height", line_height + 50);
 
     //line chart
     d3.csv(
@@ -53,7 +59,6 @@
         (d) => d.State,
         (d) => d.Year
       );
-      console.log("Line data: ", state_group);
 
       const lineChartWidth = 500,
         lineChartHeight = 400;
@@ -108,16 +113,6 @@
         .x((d) => xScale(d3.timeParse("%Y")(d[0])))
         .y((d) => yScale(d[1]));
 
-      // States and their respective colors
-      const states = [
-        "California",
-        "Colorado",
-        "Florida",
-        "Georgia",
-        "Indiana",
-      ];
-      const colors = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854"];
-
       // Scale for line colors
       var colorScale = d3.scaleOrdinal().domain(states).range(colors);
 
@@ -161,21 +156,23 @@
     });
   };
 
-  onMount(() => mainFunc(selected));
+  onMount(() => mainFunc(selected, states));
 
   // Will rerun function every time you change the selected state
-  $: mainFunc(selected);
+  $: mainFunc(selected, states);
 </script>
 
 <div class="wrapper">
   <div id="main" bind:this={svgRef}></div>
-  <select bind:value={selected}>
-    {#each rate_states as state}
-      <option value={state}>
-        {state}
-      </option>
-    {/each}
-  </select>
+  {#if dropDown}
+    <select bind:value={selected}>
+      {#each rate_states as state}
+        <option value={state}>
+          {state}
+        </option>
+      {/each}
+    </select>
+  {/if}
 </div>
 
 <style>

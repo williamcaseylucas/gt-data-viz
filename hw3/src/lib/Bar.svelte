@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { states_of_interest } from ".";
+
   import * as d3 from "d3";
   import { onMount } from "svelte";
   import { bar_height, bar_margin, bar_width } from ".";
@@ -16,8 +18,8 @@
     return Math.max(0, Math.min(index, domain.length - 1)); // gives indicies
     // return domain[Math.max(0, Math.min(index, domain.length - 1))]; // gives start and end state
   };
-
-  $: selection = [0, 10];
+  let state_data: d3.InternMap;
+  let state_keys = [];
 
   $: brush = d3
     .brushX()
@@ -27,7 +29,10 @@
     ])
     .on("start brush end", (e) => {
       if (e.selection) {
-        console.log("event", e, " ", e.selection.map(invertScale));
+        const range = e.selection.map(invertScale);
+
+        states_of_interest.set(state_keys.slice(range[0], range[1]));
+        // selection = e.selection.map(invertScale);
       }
     });
 
@@ -53,12 +58,17 @@
         .attr("transform", "translate(" + 100 + "," + 50 + ")");
 
       // Data
-      let state_data = d3.rollup(
+      state_data = d3.rollup(
         data,
         (v) => d3.mean(v, (d) => +d["Data.Rates.Violent.Murder"]),
         (d) => d.State
       );
-      console.log("bar data", state_data);
+
+      if (state_keys.length == 0) {
+        state_keys = [...state_data.keys()];
+      }
+
+      // console.log("bar data", state_data);
 
       x = d3
         .scaleBand()
@@ -117,13 +127,7 @@
         .text("Average Murder Rate Across States from 1960 to 2015");
 
       // Add brush
-      barChart
-        .append("g")
-        .call(brush)
-        .call(
-          brush.move,
-          selection.map((v) => x(v))
-        );
+      barChart.append("g").call(brush).call(brush.move, [0, 100]);
     });
   };
 

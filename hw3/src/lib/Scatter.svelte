@@ -12,18 +12,16 @@
       "https://raw.githubusercontent.com/fuyuGT/CS7450-data/main/state_crime.csv"
     );
   });
-  $: console.log("data", data);
 
   let x, y, s;
   let svgRef;
 
   $: if (data) {
     state_data = data.filter((d) => d.State == "Georgia");
-    console.log("scatter", state_data);
 
     // --- Scaling ---
     const maxHeight = 400,
-      maxWidth = 500;
+      maxWidth = 750;
 
     let xMax = d3.max(
       state_data.map((d) => +d["Data.Rates.Property.Burglary"])
@@ -78,8 +76,6 @@
   }
 
   let hoverData;
-
-  $: console.log("hoverData: ", hoverData);
 </script>
 
 <div class="wrapper">

@@ -14,13 +14,12 @@ text.my-legend {
   font-size: 12px;
   font-weight: bold;
 }
-
-p {
-  color: black;
-}
-
 .wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.main {
+  background: rgb(253, 240, 242);
 }

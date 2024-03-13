@@ -1,11 +1,11 @@
 <script lang="ts">
   import Bar from "./Bar.svelte";
-  import Scatter from "./Scatter.svelte";
+  import Line from "./Line.svelte";
 </script>
 
 <div>
   <Bar />
-  <!-- <Scatter /> -->
+  <Line dropDown={false} useStore={true}/>
 </div>
 
 <style>
