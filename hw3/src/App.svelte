@@ -4,6 +4,12 @@
   import Scatter from "./lib/Scatter.svelte";
 </script>
 
+<svelte:head>
+  <title>Info Viz - HW3</title>
+  <meta name="robots" content="noindex nofollow" />
+  <html lang="en" />
+</svelte:head>
+
 <div class="main">
   <div class="card">
     <!-- Drop down color reconfiguration -->
