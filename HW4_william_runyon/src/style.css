@@ -9,9 +9,6 @@ body {
   min-height: 100vh;
 }
 
-#app {
-}
-
 .buttons {
   display: flex;
 }

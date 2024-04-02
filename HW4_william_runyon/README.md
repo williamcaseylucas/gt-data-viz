@@ -6,6 +6,10 @@
 - [ ] Users can explore and analyze the data from multiple analytical perspectives
 - [ ] Number of tasks should be performable
 
+## Notes
+
+- ts-node file.ts works!
+
 #### Points
 
 1. Data: understand your data well
