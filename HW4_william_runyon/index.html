@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Top bar -->
+      <div class="top-bar">
+        <div class="buttons">
+          <div class="dropdown">
+            <h4 class="dropdown-title">Month</h4>
+            <div class="select">
+              <div class="selected">Jan</div>
+              <div class="caret"></div>
+            </div>
+            <ul class="menu">
+              <li class="active">Jan</li>
+              <li>Feb</li>
+              <li>Mar</li>
+              <li>Apr</li>
+              <li>May</li>
+              <li>Jun</li>
+              <li>Jul</li>
+              <li>Aug</li>
+              <li>Sep</li>
+              <li>Oct</li>
+              <li>Nov</li>
+              <li>Dec</li>
+            </ul>
+          </div>
+          <div class="dropdown">
+            <h4 class="dropdown-title">Year</h4>
+            <div class="select">
+              <div class="selected">2020</div>
+              <div class="caret"></div>
+            </div>
+            <ul class="menu">
+              <li class="active">2020</li>
+              <li>2021</li>
+            </ul>
+          </div>
+          <div class="dropdown">
+            <h4 class="dropdown-title">Region(s)</h4>
+            <div class="select">
+              <div class="selected">All Regions</div>
+              <div class="caret"></div>
+            </div>
+            <ul class="menu">
+              <li class="active">All Regions</li>
+              <li>TX</li>
+              <li>MD</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="label">Total Survived: 0</div>
+        <div class="label">Total Died: 0</div>
+        <div class="label">Total Hospitalized: 0</div>
+      </div>
+      <!-- grid -->
+      <div></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
