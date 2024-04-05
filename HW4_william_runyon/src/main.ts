@@ -1,4 +1,5 @@
 import "./style.css";
+import data from "./getData";
 
 const dropdowns = document.querySelectorAll(".dropdown");
 
@@ -34,5 +35,11 @@ dropdowns.forEach((dropdown) => {
       // add it back to the currently selected version
       option.classList.add("active");
     });
+  });
+});
+
+data.then((rows) => {
+  rows.forEach((val) => {
+    console.log("val", val.date);
   });
 });

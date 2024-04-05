@@ -8,7 +8,8 @@
 
 ## Notes
 
-- ts-node file.ts works!
+- to run .ts
+  - npx tsx ./src/getCsvData.ts
 
 #### Points
 
