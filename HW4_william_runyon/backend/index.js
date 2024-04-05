@@ -17,7 +17,7 @@ const csv = fs.readFileSync(file, "utf-8");
 const port = 3001;
 
 app.get("/", (req, res) => {
-  res.json(csv);
+  res.send(csv);
 });
 
 app.listen(port, () => {

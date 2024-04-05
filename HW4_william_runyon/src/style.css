@@ -81,10 +81,13 @@ body {
   position: absolute;
   top: 3em;
   left: 50%;
-  width: 100%;
+  width: 92%;
   transform: translateX(-50%);
   opacity: 0;
   display: none;
+  height: 350px;
+  /* overflow: hidden; */
+  overflow-y: scroll;
 }
 
 .menu li {

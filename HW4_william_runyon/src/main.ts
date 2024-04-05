@@ -1,6 +1,9 @@
 import "./style.css";
-import data from "./getData";
+import csv_data from "./getData";
+import * as d3 from "d3";
 
+const regions = document.querySelector("#regions .menu");
+console.log(regions);
 const dropdowns = document.querySelectorAll(".dropdown");
 
 // Loop through all dropdown elements
@@ -38,8 +41,15 @@ dropdowns.forEach((dropdown) => {
   });
 });
 
-data.then((rows) => {
-  rows.forEach((val) => {
-    console.log("val", val.date);
+csv_data.then((data) => {
+  // console.log("data", data);
+
+  // get unique states and populate
+  const uniqueStates = [...new Set(data.map((d) => d.state))];
+
+  uniqueStates.forEach((state) => {
+    let li = document.createElement("li");
+    li.textContent = state;
+    regions.appendChild(li);
   });
 });
