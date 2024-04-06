@@ -9,6 +9,26 @@ body {
   min-height: 100vh;
 }
 
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 2000px;
+  margin-inline: auto;
+}
+
+.main-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2em;
+  background-color: #707379;
+}
+
+.display-cell {
+  background-color: #fff;
+}
+
 .buttons {
   display: flex;
 }
@@ -24,12 +44,12 @@ body {
 }
 
 .top-bar {
-  max-width: 1500px;
   margin-inline: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: #fff;
+  width: 1500px;
 }
 
 .dropdown {

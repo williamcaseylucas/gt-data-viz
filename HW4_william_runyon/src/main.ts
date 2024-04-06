@@ -2,6 +2,7 @@ import "./style.css";
 import csv_data from "./getData";
 import { MONTHS, YEARS } from "./constants";
 import * as d3 from "d3";
+import { CSVTypes } from "./interfaces";
 
 // drop downs
 const months = document.querySelector("#months .menu");
@@ -10,7 +11,6 @@ const regions = document.querySelector("#regions .menu");
 const dropdowns = document.querySelectorAll(".dropdown");
 
 // stats
-
 let selectedMonth = "JAN";
 let selectedYear = 2020;
 let selectedRegion = "All Regions";
@@ -21,14 +21,25 @@ const stats = {
   totalDied: 0,
 };
 
-const getFilteredData = (data) => {
+const getFilteredData = (data: CSVTypes[]) => {
   let index_of_month = MONTHS.indexOf(selectedMonth);
 
-  let filteredData = data.filter(
-    (d) =>
-      d.date.getMonth() == index_of_month &&
-      d.date.getFullYear() == selectedYear
-  );
+  let filteredData;
+
+  if (selectedRegion == "All Regions") {
+    filteredData = data.filter(
+      (d) =>
+        d.date.getMonth() == index_of_month &&
+        d.date.getFullYear() == selectedYear
+    );
+  } else {
+    filteredData = data.filter(
+      (d) =>
+        d.date.getMonth() == index_of_month &&
+        d.date.getFullYear() == selectedYear &&
+        d.state == selectedRegion
+    );
+  }
 
   // update direct stats
   filteredData.forEach((d) => {
@@ -53,6 +64,22 @@ const getFilteredData = (data) => {
 
 csv_data.then((data) => {
   const filteredData = getFilteredData(data);
+
+  // MAP
+  // <svg viewBox="0 0 975 610">
+  //   <g fill="none" stroke="#000" stroke-linejoin="round" stroke-linecap="round">
+  //     <path
+  //       stroke="#aaa"
+  //       stroke-width="0.5"
+  //       d="${path(topojson.mesh(us, us.objects.counties, (a, b) => a !== b && (a.id / 1000 | 0) === (b.id / 1000 | 0)))}"
+  //     ></path>
+  //     <path
+  //       stroke-width="0.5"
+  //       d="${path(topojson.mesh(us, us.objects.states, (a, b) => a !== b))}"
+  //     ></path>
+  //     <path d="${path(topojson.feature(us, us.objects.nation))}"></path>
+  //   </g>
+  // </svg>;
 
   MONTHS.forEach((month) => {
     let li = document.createElement("li");
@@ -85,6 +112,16 @@ csv_data.then((data) => {
     });
     years.appendChild(li);
   });
+
+  let li = document.createElement("li");
+  li.textContent = "All Regions";
+  li.classList.add("active");
+  // add event listener to each li
+  li.addEventListener("click", () => {
+    selectedRegion = li.textContent;
+    getFilteredData(data);
+  });
+  regions.appendChild(li);
 
   // populate tabs and add event listeners
   const uniqueStates = [...new Set(data.map((d) => d.state))];
