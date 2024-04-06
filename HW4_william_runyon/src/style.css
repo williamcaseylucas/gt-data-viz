@@ -19,7 +19,7 @@ body {
 }
 
 .label {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -29,7 +29,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   color: #fff;
 }
 
@@ -85,7 +84,7 @@ body {
   transform: translateX(-50%);
   opacity: 0;
   display: none;
-  height: 350px;
+  max-height: 350px;
   /* overflow: hidden; */
   overflow-y: scroll;
 }
