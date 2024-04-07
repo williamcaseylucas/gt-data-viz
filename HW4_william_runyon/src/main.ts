@@ -20,7 +20,7 @@ Object.entries(STATES_LAT_LON).forEach((entry) => {
     radius: 500
   }).addTo(map)
 
-  addContentToCircle(circle, state)
+  addContentToCircle(circle, state, map)
 })
 
 
