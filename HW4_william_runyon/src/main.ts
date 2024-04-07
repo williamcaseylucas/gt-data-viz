@@ -1,8 +1,46 @@
 import "./style.css";
+import "leaflet/dist/leaflet.css";
+import L from 'leaflet'
 import csv_data from "./getData";
 import { MONTHS, YEARS } from "./constants";
 import * as d3 from "d3";
 import { CSVTypes } from "./interfaces";
+
+
+// Leaflet
+const createMap = () => {
+  const map = L.map("map").setView([40, -100], 4);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  return map
+}
+
+const map = createMap()
+
+var circle = L.circle([51.508, -0.11], {
+  color: 'red',
+  fillColor: '#f03',
+  fillOpacity: 0.5,
+  radius: 500
+}).addTo(map);
+
+// add popup content on circle
+const onHoverBind = (circle, content) => {
+  circle.bindPopup(`${content}`);
+  circle.on('mouseover', () => {
+      // @ts-ignore
+      this.openPopup();
+    });
+    circle.on('mouseout', () => {
+    // @ts-ignore
+      this.closePopup();
+  });
+}
+
+
 
 // drop downs
 const months = document.querySelector("#months .menu");

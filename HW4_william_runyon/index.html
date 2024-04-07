@@ -1,54 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-  </head>
-  <body>
-    <div class="app">
-      <!-- Top bar -->
-      <div class="top-bar">
-        <div class="buttons">
-          <div class="dropdown" id="months">
-            <h4 class="dropdown-title">Month</h4>
-            <div class="select">
-              <div class="selected">JAN</div>
-              <div class="caret"></div>
-            </div>
-            <ul class="menu"></ul>
-          </div>
-          <div class="dropdown" id="years">
-            <h4 class="dropdown-title">Year</h4>
-            <div class="select">
-              <div class="selected">2020</div>
-              <div class="caret"></div>
-            </div>
-            <ul class="menu"></ul>
-          </div>
-          <div class="dropdown" id="regions">
-            <h4 class="dropdown-title">Region(s)</h4>
-            <div class="select">
-              <div class="selected">All Regions</div>
-              <div class="caret"></div>
-            </div>
-            <ul class="menu"></ul>
-          </div>
-        </div>
 
-        <div class="label" id="positive">Positive this month: 0</div>
-        <div class="label" id="death">Died this month: 0</div>
-        <div class="label" id="recovered">Recovered this month: 0</div>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + TS</title>
+</head>
+
+<body>
+  <div class="app">
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div class="buttons">
+        <div class="dropdown" id="months">
+          <h4 class="dropdown-title">Month</h4>
+          <div class="select">
+            <div class="selected">JAN</div>
+            <div class="caret"></div>
+          </div>
+          <ul class="menu"></ul>
+        </div>
+        <div class="dropdown" id="years">
+          <h4 class="dropdown-title">Year</h4>
+          <div class="select">
+            <div class="selected">2020</div>
+            <div class="caret"></div>
+          </div>
+          <ul class="menu"></ul>
+        </div>
+        <div class="dropdown" id="regions">
+          <h4 class="dropdown-title">Region(s)</h4>
+          <div class="select">
+            <div class="selected">All Regions</div>
+            <div class="caret"></div>
+          </div>
+          <ul class="menu"></ul>
+        </div>
       </div>
-      <!-- grid -->
-      <div class="main-content">
-        <div class="display-cell" id="map">asdas</div>
-        <div class="display-cell" id="line">asd</div>
-        <div class="display-cell" id="bar">asdsa</div>
-        <div class="display-cell" id="testing">adsads</div>
-      </div>
+
+      <div class="label" id="positive">Positive this month: 0</div>
+      <div class="label" id="death">Died this month: 0</div>
+      <div class="label" id="recovered">Recovered this month: 0</div>
     </div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+    <!-- grid -->
+    <div class="main-content">
+      <div class="display-cell">
+        <div id="map">
+
+        </div>
+      </div>
+      <div class="display-cell" id="line">asd</div>
+      <div class="display-cell" id="bar">asdsa</div>
+      <div class="display-cell" id="testing">adsads</div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
