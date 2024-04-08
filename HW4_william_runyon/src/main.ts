@@ -1,31 +1,22 @@
 import "./style.css";
 import "leaflet/dist/leaflet.css";
-import L from 'leaflet'
-import { createMap, addContentToCircle } from "./leaflet_functions";
+import L from "leaflet";
+import {
+  createMap,
+  addContentToCircle,
+  recreate_circles,
+  refocus_center,
+} from "./leaflet_functions";
 import csv_data from "./getData";
 import { MONTHS, YEARS, STATES_LAT_LON } from "./constants";
 import * as d3 from "d3";
 import { CSVTypes } from "./interfaces";
 
 // Leaflet
-const map = createMap()
+const map = createMap();
 
-Object.entries(STATES_LAT_LON).forEach((entry) => {
-  const [state, vals] = entry
-  const {lat, lon} = vals
-  const circle = L.circle([lat, lon], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 500
-  }).addTo(map)
-
-  addContentToCircle(circle, state, map)
-})
-
-
-
-
+// Store circle objects to change view later
+let circleArray = []; // state : circle object
 
 // drop downs
 const months = document.querySelector("#months .menu");
@@ -44,7 +35,7 @@ const stats = {
   totalDied: 0,
 };
 
-const getFilteredData = (data: CSVTypes[]) => {
+const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
   let index_of_month = MONTHS.indexOf(selectedMonth);
 
   let filteredData;
@@ -82,27 +73,14 @@ const getFilteredData = (data: CSVTypes[]) => {
     `Recovered this month: ${stats.totalRecovered.toLocaleString("en-US")}`
   );
   console.log("filteredData", filteredData);
+
+  circleArray = recreate_circles(filteredData, circleArray, map);
   return filteredData;
 };
 
 csv_data.then((data) => {
   const filteredData = getFilteredData(data);
-
-  // MAP
-  // <svg viewBox="0 0 975 610">
-  //   <g fill="none" stroke="#000" stroke-linejoin="round" stroke-linecap="round">
-  //     <path
-  //       stroke="#aaa"
-  //       stroke-width="0.5"
-  //       d="${path(topojson.mesh(us, us.objects.counties, (a, b) => a !== b && (a.id / 1000 | 0) === (b.id / 1000 | 0)))}"
-  //     ></path>
-  //     <path
-  //       stroke-width="0.5"
-  //       d="${path(topojson.mesh(us, us.objects.states, (a, b) => a !== b))}"
-  //     ></path>
-  //     <path d="${path(topojson.feature(us, us.objects.nation))}"></path>
-  //   </g>
-  // </svg>;
+  // populate map
 
   MONTHS.forEach((month) => {
     let li = document.createElement("li");
@@ -142,6 +120,7 @@ csv_data.then((data) => {
   // add event listener to each li
   li.addEventListener("click", () => {
     selectedRegion = li.textContent;
+    refocus_center(map, selectedRegion);
     getFilteredData(data);
   });
   regions.appendChild(li);
@@ -155,6 +134,7 @@ csv_data.then((data) => {
     // add event listener to each li
     li.addEventListener("click", () => {
       selectedRegion = li.textContent;
+      refocus_center(map, selectedRegion);
       getFilteredData(data);
     });
     regions.appendChild(li);
