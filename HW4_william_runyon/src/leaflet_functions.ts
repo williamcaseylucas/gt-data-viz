@@ -21,6 +21,7 @@ const zoom = 5;
 
 // Leaflet
 export const createMap = () => {
+  // because of #map
   const map = L.map("map").setView([defaults.lat, defaults.lon], defaults.zoom);
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
@@ -32,8 +33,10 @@ export const createMap = () => {
 };
 
 // add popup content on circle
-export const addContentToCircle = (circle, content, map) => {
-  circle.bindPopup(`${content}`);
+export const addContentToCircle = (circle, state, content, map) => {
+  circle.bindPopup(
+    `<b>${state} Positive Cases</b>: ${content.toLocaleString("us-en")}`
+  );
   circle.on("mouseover", (ev) => {
     // @ts-ignore
 
@@ -62,23 +65,24 @@ export const recreate_circles = (
   map
 ) => {
   array_of_circles.forEach((circle) => {
-    console.log("circle", circle);
+    // console.log("circle", circle);
     map.removeLayer(circle);
   });
   array_of_circles = [];
 
   const states_vals: State_Vals | {} = {};
   filteredData.forEach((item) => {
-    console.log(STATES_LAT_LON[item.state], item.state);
-    if (!states_vals[item.state])
-      states_vals[item.state] = { positive_cases: 0 };
+    if (item.positive != null && item.positive != 0) {
+      // console.log(STATES_LAT_LON[item.state], item.state);
+      if (!states_vals[item.state])
+        states_vals[item.state] = { positive_cases: 0 };
 
-    states_vals[item.state]["positive_cases"] += item.positive;
+      states_vals[item.state]["positive_cases"] += item.positive;
+    }
   });
 
   // Create circles
   Object.entries(states_vals).forEach((entry) => {
-    console.log("entry", entry);
     const [state, vals] = entry;
     const { positive_cases } = vals;
 
@@ -91,7 +95,7 @@ export const recreate_circles = (
     }).addTo(map);
 
     array_of_circles.push(circle);
-    addContentToCircle(circle, positive_cases, map);
+    addContentToCircle(circle, state, positive_cases, map);
   });
 
   return array_of_circles;

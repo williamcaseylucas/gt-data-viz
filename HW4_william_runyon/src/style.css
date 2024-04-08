@@ -9,11 +9,10 @@ body {
   min-height: 100vh;
 }
 
-
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   max-width: 2000px;
   margin-inline: auto;
 }
@@ -28,14 +27,22 @@ body {
 
 .display-cell {
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.chart-container,
+.map-container {
+  flex: 1;
   position: relative;
 }
 
 #map {
-  position: absolute; 
-  top: 0; 
-  right: 0; 
-  bottom: 0; 
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
   z-index: 1;
 }
@@ -52,6 +59,12 @@ body {
 .label {
   font-size: 20px;
   font-weight: bold;
+}
+
+.top-bar-container {
+  background-color: #26489a;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 .top-bar {

@@ -3,7 +3,6 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import {
   createMap,
-  addContentToCircle,
   recreate_circles,
   refocus_center,
 } from "./leaflet_functions";
@@ -11,6 +10,7 @@ import csv_data from "./getData";
 import { MONTHS, YEARS, STATES_LAT_LON } from "./constants";
 import * as d3 from "d3";
 import { CSVTypes } from "./interfaces";
+import * as line_chart from "./line_chart.ts";
 
 // Leaflet
 const map = createMap();
@@ -25,7 +25,7 @@ const regions = document.querySelector("#regions .menu");
 const dropdowns = document.querySelectorAll(".dropdown");
 
 // stats
-let selectedMonth = "JAN";
+let selectedMonth = "MAR";
 let selectedYear = 2020;
 let selectedRegion = "All Regions";
 
@@ -80,13 +80,22 @@ const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
 
 csv_data.then((data) => {
   const filteredData = getFilteredData(data);
-  // populate map
+  const data_by_state = d3.group(filteredData, (d) => d.state);
+
+  // Line chart
+  const line = d3.selectAll("#line");
+
+  line_chart.create_line_chart(filteredData, data_by_state, line);
+  // Bar chart
+  const bar = d3.select("#bar");
+  // Testing chart
+  const testing = d3.select("#testing");
 
   MONTHS.forEach((month) => {
     let li = document.createElement("li");
     li.textContent = month;
 
-    if (month == "JAN") {
+    if (month == selectedMonth) {
       li.classList.add("active");
     }
 
@@ -100,6 +109,7 @@ csv_data.then((data) => {
 
   YEARS.forEach((year) => {
     let li = document.createElement("li");
+    console.log("year", year);
     li.textContent = year;
 
     if (year == 2020) {
@@ -108,7 +118,8 @@ csv_data.then((data) => {
 
     // add event listener to each li
     li.addEventListener("click", () => {
-      selectedYear = parseInt(li.textContent);
+      selectedYear = +li.textContent;
+
       getFilteredData(data);
     });
     years.appendChild(li);
