@@ -41,7 +41,7 @@ const stats = {
 const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
   let index_of_month = MONTHS.indexOf(selectedMonth);
 
-  let filteredData;
+  let filteredData : CSVTypes[];
 
   if (selectedRegion == "All Regions") {
     filteredData = data.filter(
@@ -79,25 +79,16 @@ const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
 
   circleArray = recreate_circles(filteredData, circleArray, map);
 
-  data_by_state = d3.group(filteredData, (d) => d.state);
-  console.log(filteredData, data_by_state);
 
-  // if (first_render) {
-  //   first_render = false;
-  // } else {
-  //   line_chart.update_data(filteredData, data_by_state);
-  // }
+  line_chart.create_line_chart(filteredData, data_by_state)
   return filteredData;
 };
 
 csv_data.then((data) => {
   const filteredData = getFilteredData(data);
-  data_by_state = d3.group(filteredData, (d) => d.state);
 
   // Line chart
-  line = d3.selectAll("#lines");
-
-  line_chart.create_line_chart(filteredData, data_by_state, line);
+  line_chart.create_line_chart(filteredData);
 
   // Bar chart
   bar = d3.select("#bar");
