@@ -96,7 +96,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   y.domain([0, max_y]);
 
   // legends
-  legend = d3.select(".legend");
+  legend = d3.select(".legend-1");
 
   legend
     .style("display", "flex")

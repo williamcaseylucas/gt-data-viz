@@ -10,11 +10,17 @@ let svg;
 const margin = {
   top: 20,
   right: 50,
-  bottom: 20,
+  bottom: 40,
   left: 75,
 };
 
 const colors = ["#e41a1c", "#377eb8", "#4daf4a"];
+
+const label_to_color = {
+  positiveSum: colors[0],
+  hospitalizeSum: colors[1],
+  deathSum: colors[2],
+};
 
 export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   const bar_chart = d3.selectAll("#bar");
@@ -102,31 +108,34 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   const stackedData = d3.stack().keys(subgroups)(bar_data);
 
   // Add the legend
-  const legend = svg
-    .selectAll(".legend")
-    .data(color.domain())
-    .enter()
-    .append("g")
-    .attr("class", "legend")
-    .attr("transform", (d, i) => `translate(-20, ${i * 20})`);
+  const legend = d3.select(".legend-2");
 
   legend
-    .append("rect")
-    .attr("x", width - 18)
-    .attr("width", 18)
-    .attr("height", 18)
-    .style("fill", color);
+    .style("display", "flex")
+    .style("flex-wrap", "wrap")
+    .style("gap", "5px")
+    .style("margin-inline", "5px");
 
-  legend
-    .selectAll("text .legend")
-    .data([subgroups])
+  legend.selectAll("div").remove();
+
+  const legends = legend
+    .selectAll("div")
+    .data(Object.keys(label_to_color))
     .enter()
-    .append("text")
-    .attr("x", width - 24)
-    .attr("y", 9)
-    .attr("dy", ".35em")
-    .style("text-anchor", "end")
-    .text((d, i, j) => d[j]);
+    .append("div")
+    .style("display", "flex")
+    .style("align-items", "center")
+    .style("margin-inline", "auto")
+    .attr("class", "legend");
+
+  legends
+    .append("div")
+    .style("width", "10px")
+    .style("height", "10px")
+    .style("margin-right", "5px")
+    .style("background-color", (subgroup) => label_to_color[subgroup]);
+
+  legends.append("span").text((state) => state);
 
   svg.selectAll("rect").remove();
 
