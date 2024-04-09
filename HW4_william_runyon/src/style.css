@@ -164,3 +164,16 @@ body {
   opacity: 1;
   z-index: 5;
 }
+
+/* tool tip */
+
+.tooltip {
+  position: absolute;
+  padding: 10px;
+  background-color: steelblue;
+  color: white;
+  border: 1px solid white;
+  border-radius: 10px;
+  display: none;
+  opacity: 0.9;
+}

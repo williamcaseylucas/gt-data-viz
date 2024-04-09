@@ -1,74 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vite + TS</title>
-</head>
+  <body>
+    <div class="app">
+      <!-- Top bar -->
+      <div class="top-bar-container">
+        <div class="top-bar">
+          <div class="buttons">
+            <div class="dropdown" id="months">
+              <h4 class="dropdown-title">Month</h4>
+              <div class="select">
+                <div class="selected">MAR</div>
+                <div class="caret"></div>
+              </div>
+              <ul class="menu"></ul>
+            </div>
+            <div class="dropdown" id="years">
+              <h4 class="dropdown-title">Year</h4>
+              <div class="select">
+                <div class="selected">2020</div>
+                <div class="caret"></div>
+              </div>
+              <ul class="menu"></ul>
+            </div>
+            <div class="dropdown" id="regions">
+              <h4 class="dropdown-title">Region(s)</h4>
+              <div class="select">
+                <div class="selected">All Regions</div>
+                <div class="caret"></div>
+              </div>
+              <ul class="menu"></ul>
+            </div>
+          </div>
 
-<body>
-  <div class="app">
-    <!-- Top bar -->
-    <div class="top-bar-container">
-      <div class="top-bar">
-        <div class="buttons">
-          <div class="dropdown" id="months">
-            <h4 class="dropdown-title">Month</h4>
-            <div class="select">
-              <div class="selected">MAR</div>
-              <div class="caret"></div>
-            </div>
-            <ul class="menu"></ul>
-          </div>
-          <div class="dropdown" id="years">
-            <h4 class="dropdown-title">Year</h4>
-            <div class="select">
-              <div class="selected">2020</div>
-              <div class="caret"></div>
-            </div>
-            <ul class="menu"></ul>
-          </div>
-          <div class="dropdown" id="regions">
-            <h4 class="dropdown-title">Region(s)</h4>
-            <div class="select">
-              <div class="selected">All Regions</div>
-              <div class="caret"></div>
-            </div>
-            <ul class="menu"></ul>
-          </div>
-        </div>
-
-        <div class="label" id="positive">Positive this month: 0</div>
-        <div class="label" id="death">Died this month: 0</div>
-        <div class="label" id="recovered">Recovered this month: 0</div>
-      </div>
-    </div>
-    <!-- grid -->
-    <div class="main-content">
-      <div class="display-cell">
-        <h1>Positive Cases</h1>
-        <div class="map-container">
-          <div id="map"></div>
+          <div class="label" id="positive">Positive this month: 0</div>
+          <div class="label" id="death">Died this month: 0</div>
+          <div class="label" id="recovered">Recovered this month: 0</div>
         </div>
       </div>
-      <div class="display-cell">
-        <h1>Top 5 Deaths (per state)</h1>
-        <div class="legend"></div>
-        <div class="chart-container" id="lines"></div>
-      </div>
-      <div class="display-cell">
-        <h1>Hospitalization</h1>
-        <div class="chart-container" id="bar"></div>
-      </div>
-      <div class="display-cell">
-        <h1>Testing</h1>
-        <div class="chart-container" id="testing">sadfdsfsad</div>
+      <!-- grid -->
+      <div class="main-content">
+        <div class="display-cell">
+          <h1>Positive Cases</h1>
+          <div class="map-container">
+            <div id="map"></div>
+          </div>
+        </div>
+        <div class="display-cell">
+          <h1>Top 5 Deaths (per state)</h1>
+          <div class="legend"></div>
+          <div class="chart-container" id="lines"></div>
+        </div>
+        <div class="display-cell">
+          <h1>Hospitalization</h1>
+          <div class="chart-container" id="bar"></div>
+        </div>
+        <div class="display-cell">
+          <h1>Testing</h1>
+          <div class="chart-container" id="testing">sadfdsfsad</div>
+        </div>
       </div>
     </div>
-  </div>
-  <script type="module" src="/src/main.ts"></script>
-</body>
-
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
