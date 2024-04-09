@@ -11,6 +11,7 @@ import { MONTHS, YEARS, STATES_LAT_LON } from "./constants";
 import * as d3 from "d3";
 import { CSVTypes } from "./interfaces";
 import * as line_chart from "./line_chart.ts";
+import * as bar_chart from "./bar_chart.ts";
 
 // Leaflet
 const map = createMap();
@@ -39,7 +40,7 @@ const stats = {
 const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
   let index_of_month = MONTHS.indexOf(selectedMonth);
 
-  let filteredData : CSVTypes[];
+  let filteredData: CSVTypes[];
 
   if (selectedRegion == "All Regions") {
     filteredData = data.filter(
@@ -77,8 +78,9 @@ const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
 
   circleArray = recreate_circles(filteredData, circleArray, map);
 
+  line_chart.create_line_chart(filteredData);
+  bar_chart.create_bar_chart(filteredData);
 
-  line_chart.create_line_chart(filteredData)
   return filteredData;
 };
 

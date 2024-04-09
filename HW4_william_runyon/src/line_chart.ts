@@ -19,39 +19,40 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   const line_chart = d3.selectAll("#lines");
   let grouped_data = d3.group(filtered_data, (d) => d.state);
 
+  // console.log("grouped_data", grouped_data);
+
   if (grouped_data.size === 1) {
     data_by_state = [];
     grouped_data.forEach((vals, state) => {
       data_by_state.push([state, vals]);
-      states_to_index[state] = 0
-      d3.select('#lines-heading').text(`COVID Deaths in ${state}`)
-      });
-
+      states_to_index[state] = 0;
+      d3.select("#lines-heading").text(`COVID Deaths in ${state}`);
+    });
   } else {
-    d3.select('#lines-heading').text(`Top 5 States with COVID Deaths`)
+    d3.select("#lines-heading").text(`Top 5 States with COVID Deaths`);
     // group by state but get sum of each
     let counts_of_positives_per_state = d3.rollup(
       filtered_data,
       (v) => d3.sum(v, (d) => d.positive),
       (d) => d.state
     );
-  
+
     let sorted_counts = d3.sort(counts_of_positives_per_state, (row) => row[1]);
     let top_5_states = new Set();
     sorted_counts
       .slice(1)
       .slice(-5)
       .forEach((val, state) => top_5_states.add(val[0]));
-  
+
     let i = 0;
     states_to_index = {};
     top_5_states.forEach((state) => {
       states_to_index[state] = i;
       i += 1;
     });
-  
+
     // console.log('top_10_states', top_10_states);
-  
+
     data_by_state = [];
     grouped_data.forEach((vals, state) => {
       if (top_5_states.has(state)) {
@@ -82,12 +83,15 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   }
 
   x.domain(d3.extent(filtered_data, (d) => d.date));
-  let max_y = 0
+  let max_y = 0;
   data_by_state.forEach((state) => {
-    const data_array = state[1]
-    max_y = Math.max(max_y, d3.max(data_array, (d) => d.death));
-  })
-  
+    const data_array = state[1];
+    max_y = Math.max(
+      max_y,
+      d3.max(data_array, (d) => d.death)
+    );
+  });
+
   if (max_y == 0 || max_y == null) max_y = 50;
   y.domain([0, max_y]);
 
@@ -138,12 +142,22 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   svg
     .selectAll(".line")
     .data(data_by_state, (state, idx) => state)
-    .join("path")
-    .attr("class", "line")
-    .attr("fill", "none")
-    .attr("stroke", (state, idx) => getColors(state))
-    .attr("stroke-width", 2)
-    .attr("d", (row, idx) => line(row[1]))
+    .join(
+      (enter) =>
+        enter
+          .append("path")
+          .attr("class", "line")
+          .attr("fill", "none")
+          .attr("stroke", (state, idx) => getColors(state))
+          .attr("stroke-width", 2)
+          .attr("d", (row, idx) => line(row[1])),
+      (update) =>
+        update
+          .transition()
+          .duration(1000)
+          .ease(d3.easeLinear)
+          .attr("d", (row, idx) => line(row[1]))
+    )
     .on("mouseover", (e, data, i) => {
       const [state, d] = data;
       const [xCoordinates, yCoordinates] = d3.pointer(e, this);
@@ -171,7 +185,6 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
       circle.style("opacity", 0);
       tooltip.style("display", "none");
     });
-
   svg.select("#y-axis").remove();
   svg.select("#x-axis").remove();
 

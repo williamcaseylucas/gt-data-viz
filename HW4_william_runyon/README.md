@@ -35,6 +35,8 @@
     - x: time
     - y: death / recovered visualized by button (per month)
       - can select all states or just one
+    - go from May to June in 2020 with all selected regions to see transitions occur
+    - or select one of the regions that are already shown to see transition
   - Bar chart (Hospitalization View)
     - x: time
     - y: hospitalizedCurrently with death compared with non dead stacked in (different from recovered, they simply did not pass away that day)
