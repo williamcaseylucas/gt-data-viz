@@ -1,0 +1,1 @@
+// Will hold hospitalization records showing maybe died versus survived (top 5 states) or just single state
