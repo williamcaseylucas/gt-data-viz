@@ -67,7 +67,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   // const width = 1200 - margin.left - margin.right;
   // const height = 500 - margin.top - margin.bottom;
   width = container.width - margin.left - margin.right;
-  height = 300 - margin.top - margin.bottom;
+  height = 500 - margin.top - margin.bottom;
 
   x = d3.scaleTime().range([0, width]);
   y = d3.scaleLinear().range([height, 0]);
