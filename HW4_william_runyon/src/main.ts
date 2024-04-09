@@ -15,8 +15,11 @@ import * as line_chart from "./line_chart.ts";
 // Leaflet
 const map = createMap();
 
+let first_render = true;
+
 // Store circle objects to change view later
 let circleArray = []; // state : circle object
+let data_by_state, line, bar, testing;
 
 // drop downs
 const months = document.querySelector("#months .menu");
@@ -75,21 +78,31 @@ const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
   console.log("filteredData", filteredData);
 
   circleArray = recreate_circles(filteredData, circleArray, map);
+
+  data_by_state = d3.group(filteredData, (d) => d.state);
+  console.log(filteredData, data_by_state);
+
+  // if (first_render) {
+  //   first_render = false;
+  // } else {
+  //   line_chart.update_data(filteredData, data_by_state);
+  // }
   return filteredData;
 };
 
 csv_data.then((data) => {
   const filteredData = getFilteredData(data);
-  const data_by_state = d3.group(filteredData, (d) => d.state);
+  data_by_state = d3.group(filteredData, (d) => d.state);
 
   // Line chart
-  const line = d3.selectAll("#line");
+  line = d3.selectAll("#lines");
 
   line_chart.create_line_chart(filteredData, data_by_state, line);
+
   // Bar chart
-  const bar = d3.select("#bar");
+  bar = d3.select("#bar");
   // Testing chart
-  const testing = d3.select("#testing");
+  testing = d3.select("#testing");
 
   MONTHS.forEach((month) => {
     let li = document.createElement("li");
