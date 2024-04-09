@@ -42,6 +42,9 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
 
   if (grouped_data.size == 1) {
     grouped_data.forEach((row, state) => {
+      d3.select("#bar-heading").text(
+        `Positive vs Hospitalized vs Death for ${state}`
+      );
       subgroups = Object.keys(row);
       bar_data.push({ state, ...row });
       groups.push(state);
@@ -49,9 +52,13 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   } else {
     let sorted_counts = d3.sort(grouped_data, (row) => row[1].positiveSum);
 
+    d3.select("#bar-heading").text(
+      `Top 10 States Positive vs Hospitalized vs Death`
+    );
+
     sorted_counts
       .slice(1)
-      .slice(-5)
+      .slice(-10)
       .forEach((val, idx) => {
         const [key, data] = val;
         subgroups = Object.keys(data);

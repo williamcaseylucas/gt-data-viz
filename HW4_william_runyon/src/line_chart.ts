@@ -6,7 +6,18 @@ const color = d3.scaleOrdinal(d3.schemeCategory10);
 const margin = { top: 40, right: 30, bottom: 40, left: 50 };
 let data_by_state;
 
-const five_colors = ["#5ad8b5", "#57cae3", "#3884ec", "#c638ec", "#e54cb1"];
+const ten_colors = [
+  "#5ad8b5",
+  "#57cae3",
+  "#3884ec",
+  "#c638ec",
+  "#e54cb1",
+  "#f2a900",
+  "#00a8f3",
+  "#8700f3",
+  "#f30068",
+  "#f3b200",
+];
 
 // line generator
 const line = d3
@@ -29,7 +40,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
       d3.select("#lines-heading").text(`COVID Deaths in ${state}`);
     });
   } else {
-    d3.select("#lines-heading").text(`Top 5 States with COVID Deaths`);
+    d3.select("#lines-heading").text(`Top 10 States with COVID Deaths`);
     // group by state but get sum of each
     let counts_of_positives_per_state = d3.rollup(
       filtered_data,
@@ -41,7 +52,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
     let top_5_states = new Set();
     sorted_counts
       .slice(1)
-      .slice(-5)
+      .slice(-10)
       .forEach((val, state) => top_5_states.add(val[0]));
 
     let i = 0;
@@ -86,11 +97,15 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   let max_y = 0;
   data_by_state.forEach((state) => {
     const data_array = state[1];
+    console.log(data_array);
     max_y = Math.max(
       max_y,
-      d3.max(data_array, (d) => d.death)
+      d3.max(data_array, (d) => (d.death ? d.death : 0))
     );
+    console.log("max-y", max_y);
   });
+
+  max_y += 100;
 
   if (max_y == 0 || max_y == null) max_y = 50;
   y.domain([0, max_y]);
@@ -114,7 +129,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
     .style("align-items", "center");
 
   const getColors = (state) => {
-    return five_colors[states_to_index[state[0].toString()]];
+    return ten_colors[states_to_index[state[0].toString()]];
   };
 
   const color_legends = legends
@@ -150,7 +165,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
           .attr("fill", "none")
           .attr("stroke", (state, idx) => getColors(state))
           .attr("stroke-width", 2)
-          .attr("d", (row, idx) => line(row[1])),
+          .attr("d", (row, idx) => line(row)),
       (update) =>
         update
           .transition()
