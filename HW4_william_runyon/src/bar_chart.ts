@@ -67,7 +67,7 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
       });
   }
 
-  console.log(bar_data, "groups", groups, "subgroups", subgroups);
+  // console.log(bar_data, "groups", groups, "subgroups", subgroups);
   // Create SVG
 
   // @ts-ignore

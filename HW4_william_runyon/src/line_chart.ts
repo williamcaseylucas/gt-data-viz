@@ -97,15 +97,11 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   let max_y = 0;
   data_by_state.forEach((state) => {
     const data_array = state[1];
-    console.log(data_array);
     max_y = Math.max(
       max_y,
       d3.max(data_array, (d) => (d.death ? d.death : 0))
     );
-    console.log("max-y", max_y);
   });
-
-  max_y += 100;
 
   if (max_y == 0 || max_y == null) max_y = 50;
   y.domain([0, max_y]);
@@ -126,7 +122,9 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
     .enter()
     .append("div")
     .style("display", "flex")
-    .style("align-items", "center");
+    .style("align-items", "center")
+    .style("margin-inline", "auto")
+    .attr("class", "legend");
 
   const getColors = (state) => {
     return ten_colors[states_to_index[state[0].toString()]];

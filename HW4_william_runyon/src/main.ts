@@ -12,13 +12,13 @@ import * as d3 from "d3";
 import { CSVTypes } from "./interfaces";
 import * as line_chart from "./line_chart.ts";
 import * as bar_chart from "./bar_chart.ts";
+import * as scatter_plot from "./scatter_plot.ts";
 
 // Leaflet
 const map = createMap();
 
 // Store circle objects to change view later
 let circleArray = []; // state : circle object
-let data_by_state, line, bar, testing;
 
 // drop downs
 const months = document.querySelector("#months .menu");
@@ -80,20 +80,13 @@ const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
 
   line_chart.create_line_chart(filteredData);
   bar_chart.create_bar_chart(filteredData);
+  scatter_plot.create_scatter_plot(filteredData);
 
   return filteredData;
 };
 
 csv_data.then((data) => {
   const filteredData = getFilteredData(data);
-
-  // Line chart
-  line_chart.create_line_chart(filteredData);
-
-  // Bar chart
-  bar = d3.select("#bar");
-  // Testing chart
-  testing = d3.select("#testing");
 
   MONTHS.forEach((month) => {
     let li = document.createElement("li");
