@@ -1,7 +1,7 @@
 import { CSVTypes } from "./interfaces";
 import * as d3 from "d3";
 
-let legend, x, y, svg, width, height, tooltip;
+let legend, x, y, svg, width, height, states_to_index;
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 const margin = { top: 40, right: 30, bottom: 40, left: 50 };
 let data_by_state;
@@ -18,37 +18,47 @@ const line = d3
 export const create_line_chart = (filtered_data: CSVTypes[]) => {
   const line_chart = d3.selectAll("#lines");
   let grouped_data = d3.group(filtered_data, (d) => d.state);
-  // group by state but get sum of each
-  let counts_of_positives_per_state = d3.rollup(
-    filtered_data,
-    (v) => d3.sum(v, (d) => d.positive),
-    (d) => d.state
-  );
 
-  let sorted_counts = d3.sort(counts_of_positives_per_state, (row) => row[1]);
-  let top_5_states = new Set();
-  sorted_counts
-    .slice(1)
-    .slice(-5)
-    .forEach((val, state) => top_5_states.add(val[0]));
-
-  let i = 0;
-  const states_to_index = {};
-  top_5_states.forEach((state) => {
-    states_to_index[state] = i;
-    i += 1;
-  });
-
-  // console.log('top_10_states', top_10_states);
-
-  data_by_state = [];
-  grouped_data.forEach((vals, state) => {
-    if (top_5_states.has(state)) {
+  if (grouped_data.size === 1) {
+    data_by_state = [];
+    grouped_data.forEach((vals, state) => {
       data_by_state.push([state, vals]);
-    }
-  });
+      states_to_index[state] = 0
+      d3.select('#lines-heading').text(`COVID Deaths in ${state}`)
+      });
 
-  console.log("data_by_state", data_by_state);
+  } else {
+    d3.select('#lines-heading').text(`Top 5 States with COVID Deaths`)
+    // group by state but get sum of each
+    let counts_of_positives_per_state = d3.rollup(
+      filtered_data,
+      (v) => d3.sum(v, (d) => d.positive),
+      (d) => d.state
+    );
+  
+    let sorted_counts = d3.sort(counts_of_positives_per_state, (row) => row[1]);
+    let top_5_states = new Set();
+    sorted_counts
+      .slice(1)
+      .slice(-5)
+      .forEach((val, state) => top_5_states.add(val[0]));
+  
+    let i = 0;
+    states_to_index = {};
+    top_5_states.forEach((state) => {
+      states_to_index[state] = i;
+      i += 1;
+    });
+  
+    // console.log('top_10_states', top_10_states);
+  
+    data_by_state = [];
+    grouped_data.forEach((vals, state) => {
+      if (top_5_states.has(state)) {
+        data_by_state.push([state, vals]);
+      }
+    });
+  }
 
   // @ts-ignore
   const container = line_chart.node().getBoundingClientRect();
@@ -72,33 +82,14 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   }
 
   x.domain(d3.extent(filtered_data, (d) => d.date));
-  let max_y = d3.max(filtered_data, (d) => d.death);
+  let max_y = 0
+  data_by_state.forEach((state) => {
+    const data_array = state[1]
+    max_y = Math.max(max_y, d3.max(data_array, (d) => d.death));
+  })
+  
   if (max_y == 0 || max_y == null) max_y = 50;
   y.domain([0, max_y]);
-
-  // const listeningRect = svg
-  //   .append("rect")
-  //   .attr("width", width)
-  //   .attr("height", height);
-
-  // listeningRect.on("mousemove", (e) => {
-  //   const [xCoordinates] = d3.pointer(e, this);
-  //   const x0 = x.invert(xCoordinates); // gives date
-  //   const data_array = data_by_state;
-  //   const bisectDate = d3.bisector((d) => console.log("adfdaj", d)).left;
-  //   const i = bisectDate(data_by_state, x0, 1);
-  //   const d0 = data_by_state[i - 1];
-  //   const d1 = data_by_state[i];
-  //   console.log(d0, d1);
-
-  //   const d = x0 - d0[1][0].date > d1[1][0].date - x0 ? d1 : d0;
-  //   const xPos = x(d[1][0].date);
-  //   const yPos = y(d[1][0].death);
-
-  //   circle.attr("cx", xPos).attr("cy", yPos);
-
-  //   console.log(xPos, yPos);
-  // });
 
   // legends
   legend = d3.select(".legend");
@@ -146,15 +137,13 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   // actual data
   svg
     .selectAll(".line")
-    .data(data_by_state, (state, idx) => console.log("state", state))
+    .data(data_by_state, (state, idx) => state)
     .join("path")
     .attr("class", "line")
     .attr("fill", "none")
     .attr("stroke", (state, idx) => getColors(state))
     .attr("stroke-width", 2)
-    .attr("d", (row, idx) => {
-      return line(row[1]);
-    })
+    .attr("d", (row, idx) => line(row[1]))
     .on("mouseover", (e, data, i) => {
       const [state, d] = data;
       const [xCoordinates, yCoordinates] = d3.pointer(e, this);
@@ -168,7 +157,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
       const x0 = x.invert(xCoordinates); // gives date
 
       const data_from_date = d.find((row) => row.date.getDay() === x0.getDay());
-      console.log(data_from_date.state, data_from_date.death);
+      // console.log(data_from_date.state, data_from_date.death);
 
       tooltip
         .style("display", "block")
