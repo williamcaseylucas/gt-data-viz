@@ -163,7 +163,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
           .attr("fill", "none")
           .attr("stroke", (state, idx) => getColors(state))
           .attr("stroke-width", 2)
-          .attr("d", (row, idx) => line(row)),
+          .attr("d", (row, idx) => line(row[1])),
       (update) =>
         update
           .transition()
