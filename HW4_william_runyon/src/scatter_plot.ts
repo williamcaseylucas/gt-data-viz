@@ -33,7 +33,23 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
   const width = container.width - margin.left - margin.right;
 
   const xDomain = d3.extent(filtered_data, (d) => d.date);
-  const xScale = d3.scaleLinear().domain(xDomain).range([0, width]);
+  const x = d3.scaleLinear().domain(xDomain).range([0, width]);
+  const yDomain = d3.extent(filtered_data, (d) => d.positive);
+  const y = d3.scaleLinear().domain(yDomain).range([height, 0]);
+
+  const xAxis = d3.axisBottom(x);
+  const yAxis = d3.axisLeft(y);
+
+  const svg = scatter_plot
+    .append("svg")
+    .append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(${margin.left}, ${height - margin.bottom})`);
+
+  svg
+    .select("x-axis")
+    .append("g")
+    .call(xAxis.ticks(5).tickFormat((d) => d));
 
   // console.log("grouped_data", grouped_data);
 
