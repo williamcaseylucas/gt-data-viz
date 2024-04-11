@@ -1,5 +1,6 @@
 import { CSVTypes } from "./interfaces";
 import * as d3 from "d3";
+import { STATES_TO_COLORS } from "./constants";
 
 let legend, x, y, svg, width, height, states_to_index;
 const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -126,16 +127,12 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
     .style("margin-inline", "auto")
     .attr("class", "legend");
 
-  const getColors = (state) => {
-    return ten_colors[states_to_index[state[0].toString()]];
-  };
-
   const color_legends = legends
     .append("div")
     .style("width", "10px")
     .style("height", "10px")
     .style("margin-right", "5px")
-    .style("background-color", (state) => getColors(state));
+    .style("background-color", (state) => STATES_TO_COLORS[state[0]]);
 
   legends.append("span").text((state) => state[0]);
 
@@ -161,7 +158,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
           .append("path")
           .attr("class", "line")
           .attr("fill", "none")
-          .attr("stroke", (state, idx) => getColors(state))
+          .attr("stroke", (state, idx) => STATES_TO_COLORS[state[0]])
           .attr("stroke-width", 2)
           .attr("d", (row, idx) => line(row[1])),
       (update) =>
