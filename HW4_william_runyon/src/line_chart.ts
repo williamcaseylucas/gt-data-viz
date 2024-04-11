@@ -67,9 +67,6 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   width = container.width - margin.left - margin.right;
   height = 500 - margin.top - margin.bottom;
 
-  x = d3.scaleTime().range([0, width]);
-  y = d3.scaleLinear().range([height, 0]);
-
   if (!svg) {
     svg = line_chart
       .append("svg")
@@ -80,7 +77,6 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
   }
 
-  x.domain(d3.extent(filtered_data, (d) => d.date));
   let max_y = 0;
   data_by_state.forEach((state) => {
     const data_array = state[1];
@@ -91,7 +87,12 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   });
 
   if (max_y == 0 || max_y == null) max_y = 50;
-  y.domain([0, max_y]);
+
+  x = d3
+    .scaleTime()
+    .domain(d3.extent(filtered_data, (d) => d.date))
+    .range([0, width]);
+  y = d3.scaleLinear().domain([0, max_y]).range([height, 0]);
 
   // legends
   legend = d3.select(".legend-1");
@@ -171,6 +172,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
 
       tooltip
         .style("display", "block")
+        .style("color", "white")
         .style("left", `${xCoordinates + 50}px`)
         .style("top", `${yCoordinates + 50}px`)
         .html(

@@ -2,7 +2,7 @@
 
 // hospitalized, death, positive
 
-import { CSVTypes } from "./interfaces";
+import { BAR_DATA, CSVTypes } from "./interfaces";
 import * as d3 from "d3";
 
 let svg;
@@ -25,7 +25,7 @@ const label_to_color = {
 export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   const bar_chart = d3.selectAll("#bar");
 
-  let bar_data = []; //{state: 'CA', positiveSum: 53417, hospitalizeSum: 0, deathSum: 1081}
+  const bar_data: BAR_DATA[] = []; //{state: 'CA', positiveSum: 53417, hospitalizeSum: 0, deathSum: 1081}
   let groups = [];
   let subgroups;
 
@@ -68,7 +68,8 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   }
 
   // console.log(bar_data, "groups", groups, "subgroups", subgroups);
-  // Create SVG
+
+  console.log("bar data", bar_data);
 
   // @ts-ignore
   const container = bar_chart.node().getBoundingClientRect();
@@ -101,9 +102,11 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
     .attr("transform", `translate(0, ${height})`)
     .call(d3.axisBottom(x).tickSizeOuter(0));
 
-  // CHANGE THE DOMAIN RANGE
   // Add Y axis
-  let y_max = d3.max(bar_data, (d) => d.positiveSum);
+  let y_max = d3.max(
+    bar_data,
+    (d) => d.positiveSum + d.deathSum + d.hospitalizeSum
+  );
   const y = d3.scaleLinear().domain([0, y_max]).range([height, 0]);
   svg.append("g").attr("id", "bar-y-axis").call(d3.axisLeft(y));
 
@@ -130,8 +133,7 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
     .append("div")
     .style("display", "flex")
     .style("align-items", "center")
-    .style("margin-inline", "auto")
-    .attr("class", "legend");
+    .style("margin-inline", "auto");
 
   legends
     .append("div")
@@ -143,6 +145,51 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   legends.append("span").text((state) => state);
 
   svg.selectAll("rect").remove();
+
+  console.log("stackedData", stackedData);
+
+  const tooltip = bar_chart
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "10px");
+
+  // Three function that change the tooltip when user hover / move / leave a cell
+  // Three function that change the tooltip when user hover / move / leave a cell
+  const mouseover = function (e, d) {
+    const subgroupName = d3.select(this.parentNode).datum().key;
+    const subgroupValue = d.data[subgroupName];
+
+    const [xCoordinates, yCoordinates] = d3.pointer(e, this);
+
+    console.log(xCoordinates, yCoordinates);
+
+    console.log("mouseover", subgroupName, subgroupValue);
+    tooltip
+      .style("display", "block")
+      .html(
+        "<strong>Subgroup:</strong> " +
+          subgroupName +
+          "<br>" +
+          "<strong>Value: </strong>" +
+          subgroupValue
+      )
+      .style("opacity", 1);
+  };
+  const mousemove = function (e, d) {
+    tooltip
+      .style("transform", "translateY(-60%)")
+      .style("left", e.x / 2 + "px")
+      .style("top", e.y / 2 - 30 + "px");
+  };
+  const mouseleave = function (e, d) {
+    tooltip.style("opacity", 0);
+    tooltip.style("display", "none");
+  };
 
   svg
     .append("g")
@@ -159,7 +206,8 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
           .attr("x", (d) => x(d.data.state))
           .attr("y", (d) => y(d[1]))
           .attr("height", (d) => y(d[0]) - y(d[1]))
-          .attr("width", x.bandwidth()),
+          .attr("width", x.bandwidth())
+          .attr("stroke", "grey"),
       (update) =>
         update
           .transition()
@@ -169,5 +217,8 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
           .attr("y", (d) => y(d[1]))
           .attr("height", (d) => y(d[0]) - y(d[1]))
           .attr("width", x.bandwidth())
-    );
+    )
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseleave", mouseleave);
 };

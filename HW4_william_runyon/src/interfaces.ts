@@ -41,3 +41,10 @@ export interface CSVTypes {
   totalTestsViral: number;
   totalTestsViralIncrease: number;
 }
+
+export interface BAR_DATA {
+  state: string;
+  positiveSum: number;
+  hospitalizeSum: number;
+  deathSum: number;
+}

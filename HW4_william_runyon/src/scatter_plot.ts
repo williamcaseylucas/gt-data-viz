@@ -89,4 +89,34 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
     .attr("cy", (d) => y(d.positive))
     .attr("r", 3)
     .style("fill", (d) => STATES_TO_COLORS[d.state]); // "#69b3a2"
+
+  // legends
+  const legend = d3.select(".legend-3");
+
+  legend
+    .style("display", "flex")
+    .style("flex-wrap", "wrap")
+    .style("gap", "5px")
+    .style("margin-inline", "5px");
+
+  legend.selectAll("div").remove();
+  const legends = legend
+    .selectAll("div")
+    .data(data_by_state, (row, idx) => row[0])
+    .enter()
+    .append("div")
+    .style("display", "flex")
+    .style("align-items", "center")
+    .style('justify-content', 'center')
+    .style("margin-inline", "auto")
+    .attr("class", "legend");
+
+  const color_legends = legends
+    .append("div")
+    .style("width", "10px")
+    .style("height", "10px")
+    .style("margin-right", "5px")
+    .style("background-color", (state) => STATES_TO_COLORS[state[0]]);
+
+  legends.append("span").text((state) => state[0]);
 };
