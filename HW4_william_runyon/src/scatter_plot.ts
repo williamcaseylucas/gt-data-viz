@@ -1,10 +1,10 @@
 import { CSVTypes } from "./interfaces";
 import * as d3 from "d3";
 import { STATES_TO_COLORS } from "./constants";
+import { getKStates } from "./functions";
 
-let legend, x, y, svg, width, height, states_to_index;
+let svg;
 const margin = { top: 40, right: 30, bottom: 40, left: 50 };
-let data_by_state;
 
 // positive test cases per state
 
@@ -12,7 +12,19 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
   const scatter_plot = d3.selectAll("#scatter");
   let grouped_data = d3.group(filtered_data, (d) => d.state);
 
-  // console.log("grouped data", grouped_data);
+  let counts_of_positive_per_state = d3.rollup(
+    filtered_data,
+    (v) => d3.sum(v, (d) => d.positiveIncrease),
+    (d) => d.state
+  );
+
+  const data_by_state = getKStates(
+    10,
+    counts_of_positive_per_state,
+    grouped_data
+  );
+
+  console.log("grouped data", grouped_data);
 
   // @ts-ignore
   const container = scatter_plot.node().getBoundingClientRect();
@@ -27,10 +39,15 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
     .domain(d3.extent(filtered_data, (d) => d.date))
     .range([0, width]);
 
-  const y = d3
-    .scaleLinear()
-    .domain([0, d3.max(filtered_data, (d) => d.positive)])
-    .range([height, 0]);
+  let maxY = 0;
+  data_by_state.forEach(([state, array], idx) => {
+    maxY = Math.max(
+      maxY,
+      d3.max(array, (d) => d.positiveIncrease)
+    );
+  });
+
+  const y = d3.scaleLinear().domain([0, maxY]).range([height, 0]);
 
   if (!svg) {
     svg = scatter_plot
@@ -59,7 +76,9 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
   svg
     .selectAll("g")
     .attr("class", "circles")
-    .data(grouped_data)
+    .data(data_by_state, (d) => {
+      return d;
+    })
     .enter()
     .append("g")
     .attr("class", "circles")

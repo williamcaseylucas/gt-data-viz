@@ -33,9 +33,9 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   let grouped_data = d3.rollup(
     filtered_data,
     (v) => ({
-      positiveSum: d3.sum(v, (d) => d.positive),
-      hospitalizeSum: d3.sum(v, (d) => d.hospitalized),
-      deathSum: d3.sum(v, (d) => d.death),
+      positiveSum: d3.sum(v, (d) => d.positiveIncrease),
+      hospitalizeSum: d3.sum(v, (d) => d.hospitalizedIncrease),
+      deathSum: d3.sum(v, (d) => d.deathIncrease),
     }),
     (d) => d.state
   );
@@ -91,8 +91,6 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
 
   // // Add X axis
   const x = d3.scaleBand().domain(groups).range([0, width]).padding([0.2]);
-
-  const vals_to_check = bar_data.map((item) => item.state);
 
   svg.select("#bar-x-axis").remove();
   svg.select("#bar-y-axis").remove();

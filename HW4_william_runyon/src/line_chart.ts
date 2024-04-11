@@ -3,29 +3,15 @@ import * as d3 from "d3";
 import { STATES_TO_COLORS } from "./constants";
 
 let legend, x, y, svg, width, height, states_to_index;
-const color = d3.scaleOrdinal(d3.schemeCategory10);
 const margin = { top: 40, right: 30, bottom: 40, left: 50 };
 let data_by_state;
-
-const ten_colors = [
-  "#5ad8b5",
-  "#57cae3",
-  "#3884ec",
-  "#c638ec",
-  "#e54cb1",
-  "#f2a900",
-  "#00a8f3",
-  "#8700f3",
-  "#f30068",
-  "#f3b200",
-];
 
 // line generator
 const line = d3
   .line()
   .defined((d) => d.death != null)
   .x((d) => x(d.date))
-  .y((d) => y(d.death));
+  .y((d) => y(d.deathIncrease));
 
 export const create_line_chart = (filtered_data: CSVTypes[]) => {
   const line_chart = d3.selectAll("#lines");
@@ -43,13 +29,13 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   } else {
     d3.select("#lines-heading").text(`Top 10 States with COVID Deaths`);
     // group by state but get sum of each
-    let counts_of_positives_per_state = d3.rollup(
+    let counts_of_deaths_per_state = d3.rollup(
       filtered_data,
-      (v) => d3.sum(v, (d) => d.positive),
+      (v) => d3.sum(v, (d) => d.deathIncrease),
       (d) => d.state
     );
 
-    let sorted_counts = d3.sort(counts_of_positives_per_state, (row) => row[1]);
+    let sorted_counts = d3.sort(counts_of_deaths_per_state, (row) => row[1]);
     let top_5_states = new Set();
     sorted_counts
       .slice(1)
@@ -100,7 +86,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
     const data_array = state[1];
     max_y = Math.max(
       max_y,
-      d3.max(data_array, (d) => (d.death ? d.death : 0))
+      d3.max(data_array, (d) => (d.deathIncrease ? d.deathIncrease : 0))
     );
   });
 
@@ -188,7 +174,7 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
         .style("left", `${xCoordinates + 50}px`)
         .style("top", `${yCoordinates + 50}px`)
         .html(
-          `<strong>State: </strong> ${data_from_date.state}<br><strong>Death: </strong> ${data_from_date.death}`
+          `<strong>State: </strong> ${data_from_date.state}<br><strong>Death: </strong> ${data_from_date.deathIncrease}`
         );
     })
     .on("mouseout", (e, data, i) => {
