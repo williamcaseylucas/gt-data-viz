@@ -10,7 +10,7 @@ let data_by_state;
 // line generator
 const line = d3
   .line()
-  .defined((d) => d.death != null)
+  .defined((d) => d.deathIncrease != null)
   .x((d) => x(d.date))
   .y((d) => y(d.deathIncrease));
 
@@ -21,7 +21,7 @@ export const create_line_chart = (
   const line_chart = d3.selectAll("#lines");
   let grouped_data = d3.group(filtered_data, (d) => d.state);
 
-  // console.log("grouped_data", grouped_data);
+  console.log("line chart grouped_data", grouped_data);
 
   if (grouped_data.size === 1) {
     data_by_state = [];
@@ -47,6 +47,7 @@ export const create_line_chart = (
       grouped_data
     );
   }
+  console.log("data_by_state", data_by_state);
 
   // @ts-ignore
   const container = line_chart.node().getBoundingClientRect();
@@ -72,11 +73,11 @@ export const create_line_chart = (
     const data_array = state[1];
     max_y = Math.max(
       max_y,
-      d3.max(data_array, (d) => (d.deathIncrease ? d.deathIncrease : 0))
+      d3.max(data_array, (d) => d.deathIncrease || 0)
     );
   });
 
-  if (max_y == 0 || max_y == null) max_y = 50;
+  if (max_y === 0 || max_y == null) max_y = 50;
 
   x = d3
     .scaleTime()
@@ -137,7 +138,10 @@ export const create_line_chart = (
           .attr("fill", "none")
           .attr("stroke", (state, idx) => STATES_TO_COLORS[state[0]])
           .attr("stroke-width", 2)
-          .attr("d", (row, idx) => line(row[1])),
+          .attr("d", (row, idx) => {
+            console.log("row from line_chart", row[1]);
+            return line(row[1]);
+          }),
       (update) =>
         update
           .transition()

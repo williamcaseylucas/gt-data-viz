@@ -44,3 +44,5 @@
     - Show the relationship between testing and case detection.
     - x: time
     - y: (positive / negative) => totalTestResults
+
+### AR -> Mar -> 2020 -> Regions
