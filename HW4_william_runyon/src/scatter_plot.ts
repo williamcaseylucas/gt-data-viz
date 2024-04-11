@@ -24,8 +24,6 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
     grouped_data
   );
 
-  console.log("grouped data", grouped_data);
-
   // @ts-ignore
   const container = scatter_plot.node().getBoundingClientRect();
 
@@ -44,9 +42,12 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
   data_by_state.forEach(([state, array], idx) => {
     maxY = Math.max(
       maxY,
-      d3.max(array, (d) => d.positiveIncrease)
+      d3.max(array, (d) => d.positive)
     );
   });
+
+  console.log("data_by_state", data_by_state);
+  console.log("max_y", maxY);
 
   const y = d3.scaleLinear().domain([0, maxY]).range([height, 0]);
 
@@ -75,9 +76,11 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
 
   // Add dots
   svg
-    .selectAll("g")
+    .selectAll(".circles")
+    .append("g")
     .attr("class", "circles")
     .data(data_by_state, (d) => {
+      console.log("scatter data", d);
       return d;
     })
     .enter()
