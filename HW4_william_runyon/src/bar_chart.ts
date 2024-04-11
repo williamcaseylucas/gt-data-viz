@@ -2,6 +2,7 @@
 
 // hospitalized, death, positive
 
+import { HEIGHT } from "./constants";
 import { BAR_DATA, CSVTypes } from "./interfaces";
 import * as d3 from "d3";
 
@@ -74,10 +75,13 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   // @ts-ignore
   const container = bar_chart.node().getBoundingClientRect();
   // const width = 740 - margin.left - margin.right;
-  const height = 500 - margin.top - margin.bottom;
+  // const height = 500 - margin.top - margin.bottom;
+  // const height = container.bottom - margin.top - margin.bottom;
+  // console.log("container height", container);
 
   const width = container.width - margin.left - margin.right;
-  // height = 300 - margin.top - margin.bottom;
+  // const height = HEIGHT - margin.top - margin.bottom;
+  const height = container.height - margin.top - margin.bottom;
 
   // console.log(subgroups, groups);
 

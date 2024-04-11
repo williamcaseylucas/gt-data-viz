@@ -1,6 +1,6 @@
 import { CSVTypes } from "./interfaces";
 import * as d3 from "d3";
-import { STATES_TO_COLORS } from "./constants";
+import { HEIGHT, STATES_TO_COLORS } from "./constants";
 import { getKStates } from "./functions";
 
 let svg;
@@ -30,7 +30,8 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
   const container = scatter_plot.node().getBoundingClientRect();
 
   // const width = 740 - margin.left - margin.right;
-  const height = 500 - margin.top - margin.bottom;
+  // const height = HEIGHT - margin.top - margin.bottom;
+  const height = container.height - margin.top - margin.bottom;
   const width = container.width - margin.left - margin.right;
 
   // // Create X and Y scales
@@ -107,7 +108,7 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
     .append("div")
     .style("display", "flex")
     .style("align-items", "center")
-    .style('justify-content', 'center')
+    .style("justify-content", "center")
     .style("margin-inline", "auto")
     .attr("class", "legend");
 

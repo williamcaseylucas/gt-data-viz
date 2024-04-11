@@ -1,6 +1,6 @@
 import { CSVTypes } from "./interfaces";
 import * as d3 from "d3";
-import { STATES_TO_COLORS } from "./constants";
+import { HEIGHT, STATES_TO_COLORS } from "./constants";
 
 let legend, x, y, svg, width, height, states_to_index;
 const margin = { top: 40, right: 30, bottom: 40, left: 50 };
@@ -65,7 +65,8 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
   // const width = 1200 - margin.left - margin.right;
   // const height = 500 - margin.top - margin.bottom;
   width = container.width - margin.left - margin.right;
-  height = 500 - margin.top - margin.bottom;
+  // height = HEIGHT - margin.top - margin.bottom;
+  height = container.height - margin.top - margin.bottom;
 
   if (!svg) {
     svg = line_chart

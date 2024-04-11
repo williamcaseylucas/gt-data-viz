@@ -15,6 +15,8 @@ export const MONTHS = [
 
 export const YEARS = [2020, 2021];
 
+export const HEIGHT = 500;
+
 export const STATES_LAT_LON = {
   WI: {
     lat: 44.5,
