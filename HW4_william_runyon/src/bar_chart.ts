@@ -23,7 +23,10 @@ const label_to_color = {
   // deathSum: colors[2],
 };
 
-export const create_bar_chart = (filtered_data: CSVTypes[]) => {
+export const create_bar_chart = (
+  filtered_data: CSVTypes[],
+  slider_value: number
+) => {
   const bar_chart = d3.selectAll("#bar");
 
   const bar_data: BAR_DATA[] = []; //{state: 'CA', positiveSum: 53417, negativeSum: 0, deathSum: 1081}
@@ -43,9 +46,7 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
 
   if (grouped_data.size == 1) {
     grouped_data.forEach((row, state) => {
-      d3.select("#bar-heading").text(
-        `Positive vs Hospitalized vs Death for ${state}`
-      );
+      d3.select("#bar-heading").text(`Positive vs Negative ${state}`);
       subgroups = Object.keys(row);
       bar_data.push({ state, ...row });
       groups.push(state);
@@ -53,24 +54,19 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   } else {
     let sorted_counts = d3.sort(grouped_data, (row) => row[1].positiveSum);
 
-    d3.select("#bar-heading").text(
-      `Top 10 States Positive vs Hospitalized vs Death`
-    );
-
     sorted_counts
       .slice(1)
-      .slice(-10)
+      .slice(-slider_value)
       .forEach((val, idx) => {
         const [key, data] = val;
         subgroups = Object.keys(data);
         bar_data.push({ state: key, ...data });
         groups.push(key);
       });
+    d3.select("#bar-heading").text(`Top 10 States Positive vs Negative`);
   }
 
   // console.log(bar_data, "groups", groups, "subgroups", subgroups);
-
-  console.log("bar data", bar_data);
 
   // @ts-ignore
   const container = bar_chart.node().getBoundingClientRect();
@@ -146,8 +142,6 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   legends.append("span").text((state) => state);
 
   svg.selectAll("rect").remove();
-
-  console.log("stackedData", stackedData);
 
   const tooltip = bar_chart
     .append("div")

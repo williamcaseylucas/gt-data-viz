@@ -72,12 +72,12 @@ export const recreate_circles = (
 
   const states_vals: State_Vals | {} = {};
   filteredData.forEach((item) => {
-    if (item.positive != null && item.positive != 0) {
+    if (item.positiveIncrease != null && item.positiveIncrease !== 0) {
       // console.log(STATES_LAT_LON[item.state], item.state);
       if (!states_vals[item.state])
         states_vals[item.state] = { positive_cases: 0 };
 
-      states_vals[item.state]["positive_cases"] += item.positive;
+      states_vals[item.state]["positive_cases"] += item.positiveIncrease;
     }
   });
 
@@ -91,7 +91,7 @@ export const recreate_circles = (
       color: "red",
       fillColor: "#f03",
       opacity: 0.5,
-      radius: positive_cases * 0.05,
+      radius: positive_cases * 1.5,
     }).addTo(map);
 
     array_of_circles.push(circle);

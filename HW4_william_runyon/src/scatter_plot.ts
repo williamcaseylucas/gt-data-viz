@@ -8,7 +8,10 @@ const margin = { top: 40, right: 30, bottom: 40, left: 50 };
 
 // positive test cases per state
 
-export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
+export const create_scatter_plot = (
+  filtered_data: CSVTypes[],
+  slider_value: number
+) => {
   const scatter_plot = d3.selectAll("#scatter");
   let grouped_data = d3.group(filtered_data, (d) => d.state);
 
@@ -18,8 +21,10 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
     (d) => d.state
   );
 
+  // hospital, may, md
+
   const data_by_state = getKStates(
-    10,
+    slider_value,
     counts_of_positive_per_state,
     grouped_data
   );

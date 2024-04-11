@@ -5,7 +5,7 @@ export const getKStates = (k, filtered_array, original_array) => {
   let top_k_states = new Set();
   sorted_counts
     .slice(1)
-    .slice(-10)
+    .slice(-k)
     .forEach((val, state) => top_k_states.add(val[0]));
 
   let i = 0;

@@ -1,6 +1,7 @@
 import { CSVTypes } from "./interfaces";
 import * as d3 from "d3";
 import { HEIGHT, STATES_TO_COLORS } from "./constants";
+import { getKStates } from "./functions";
 
 let legend, x, y, svg, width, height, states_to_index;
 const margin = { top: 40, right: 30, bottom: 40, left: 50 };
@@ -13,7 +14,10 @@ const line = d3
   .x((d) => x(d.date))
   .y((d) => y(d.deathIncrease));
 
-export const create_line_chart = (filtered_data: CSVTypes[]) => {
+export const create_line_chart = (
+  filtered_data: CSVTypes[],
+  slider_value: number
+) => {
   const line_chart = d3.selectAll("#lines");
   let grouped_data = d3.group(filtered_data, (d) => d.state);
 
@@ -21,8 +25,10 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
 
   if (grouped_data.size === 1) {
     data_by_state = [];
+    states_to_index = {};
     grouped_data.forEach((vals, state) => {
       data_by_state.push([state, vals]);
+
       states_to_index[state] = 0;
       d3.select("#lines-heading").text(`COVID Deaths in ${state}`);
     });
@@ -35,28 +41,11 @@ export const create_line_chart = (filtered_data: CSVTypes[]) => {
       (d) => d.state
     );
 
-    let sorted_counts = d3.sort(counts_of_deaths_per_state, (row) => row[1]);
-    let top_5_states = new Set();
-    sorted_counts
-      .slice(1)
-      .slice(-10)
-      .forEach((val, state) => top_5_states.add(val[0]));
-
-    let i = 0;
-    states_to_index = {};
-    top_5_states.forEach((state) => {
-      states_to_index[state] = i;
-      i += 1;
-    });
-
-    // console.log('top_10_states', top_10_states);
-
-    data_by_state = [];
-    grouped_data.forEach((vals, state) => {
-      if (top_5_states.has(state)) {
-        data_by_state.push([state, vals]);
-      }
-    });
+    data_by_state = getKStates(
+      slider_value,
+      counts_of_deaths_per_state,
+      grouped_data
+    );
   }
 
   // @ts-ignore

@@ -31,11 +31,13 @@ let selectedMonth = "MAR";
 let selectedYear = 2020;
 let selectedRegion = "All Regions";
 
-const stats = {
+let stats = {
   totalPostive: 0,
   totalRecovered: 0,
   totalDied: 0,
 };
+
+let slider_value = 5;
 
 const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
   let index_of_month = MONTHS.indexOf(selectedMonth);
@@ -57,11 +59,17 @@ const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
     );
   }
 
+  stats = {
+    totalPostive: 0,
+    totalRecovered: 0,
+    totalDied: 0,
+  };
+
   // update direct stats
   filteredData.forEach((d) => {
     stats.totalRecovered += d.recovered ? d.recovered : 0;
-    stats.totalDied += d.death ? d.death : 0;
-    stats.totalPostive += d.positive ? d.positive : 0;
+    stats.totalDied += d.deathIncrease ? d.deathIncrease : 0;
+    stats.totalPostive += d.positiveIncrease ? d.positiveIncrease : 0;
   });
 
   // update these
@@ -78,14 +86,19 @@ const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
 
   circleArray = recreate_circles(filteredData, circleArray, map);
 
-  line_chart.create_line_chart(filteredData);
-  bar_chart.create_bar_chart(filteredData);
-  scatter_plot.create_scatter_plot(filteredData);
+  line_chart.create_line_chart(filteredData, slider_value);
+  bar_chart.create_bar_chart(filteredData, slider_value);
+  scatter_plot.create_scatter_plot(filteredData, slider_value);
 
   return filteredData;
 };
 
 csv_data.then((data) => {
+  d3.select(".slider").on("change", (e) => {
+    slider_value = +e.target.value;
+    getFilteredData(data);
+  });
+
   const filteredData = getFilteredData(data);
 
   MONTHS.forEach((month) => {
