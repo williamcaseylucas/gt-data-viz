@@ -14,7 +14,7 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
 
   let counts_of_positive_per_state = d3.rollup(
     filtered_data,
-    (v) => d3.sum(v, (d) => d.positiveIncrease),
+    (v) => d3.sum(v, (d) => d.hospitalizedIncrease || 0),
     (d) => d.state
   );
 
@@ -42,12 +42,9 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
   data_by_state.forEach(([state, array], idx) => {
     maxY = Math.max(
       maxY,
-      d3.max(array, (d) => d.positive)
+      d3.max(array, (d) => d.hospitalized)
     );
   });
-
-  console.log("data_by_state", data_by_state);
-  console.log("max_y", maxY);
 
   const y = d3.scaleLinear().domain([0, maxY]).range([height, 0]);
 
@@ -74,25 +71,64 @@ export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
 
   d3.selectAll(".circles").remove();
 
+  const tooltip = scatter_plot
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "10px");
+
+  const mouseover = function (e, d) {
+    tooltip.style("opacity", 1).style("display", "block");
+  };
+
+  const mousemove = function (e, d) {
+    const [xCoordinates, yCoordinates] = d3.pointer(e, this);
+
+    tooltip
+      .html(
+        `<strong>State: </strong>${d.state} <br>
+         <strong>Hospitalized: </strong>${d.hospitalized.toLocaleString(
+           "us-en"
+         )}`
+      )
+      .style("left", `${xCoordinates + 50}px`)
+      .style("top", `${yCoordinates + 50}px`);
+  };
+
+  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+  const mouseleave = function (e, d) {
+    tooltip.transition().duration(200).style("opacity", 0);
+  };
+
   // Add dots
   svg
     .selectAll(".circles")
     .append("g")
     .attr("class", "circles")
     .data(data_by_state, (d) => {
-      console.log("scatter data", d);
       return d;
     })
     .enter()
     .append("g")
     .attr("class", "circles")
     .selectAll("circles")
-    .data((d) => d[1])
+    .data((d) =>
+      d[1].filter((item) => item.hospitalized && item.hospitalized !== 0)
+    )
     .join("circle")
     .attr("cx", (d) => x(d.date))
-    .attr("cy", (d) => y(d.positive))
-    .attr("r", 3)
-    .style("fill", (d) => STATES_TO_COLORS[d.state]); // "#69b3a2"
+    .attr("cy", (d) => y(d.hospitalized))
+    .attr("r", 5)
+    .style("fill", (d) => STATES_TO_COLORS[d.state])
+    .style("opacity", 0.5)
+    .style("stroke", "white")
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseleave", mouseleave);
 
   // legends
   const legend = d3.select(".legend-3");

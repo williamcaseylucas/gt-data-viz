@@ -18,15 +18,15 @@ const margin = {
 const colors = ["#C7EFCF", "#FE5F55", "#000000"];
 
 const label_to_color = {
-  recoveredSum: colors[0],
-  hospitalizeSum: colors[1],
-  deathSum: colors[2],
+  positiveSum: colors[0],
+  negativeSum: colors[1],
+  // deathSum: colors[2],
 };
 
 export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   const bar_chart = d3.selectAll("#bar");
 
-  const bar_data: BAR_DATA[] = []; //{state: 'CA', recoveredSum: 53417, hospitalizeSum: 0, deathSum: 1081}
+  const bar_data: BAR_DATA[] = []; //{state: 'CA', positiveSum: 53417, negativeSum: 0, deathSum: 1081}
   let groups = [];
   let subgroups;
 
@@ -34,9 +34,9 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   let grouped_data = d3.rollup(
     filtered_data,
     (v) => ({
-      recoveredSum: d3.sum(v, (d) => d.recovered),
-      hospitalizedSum: d3.sum(v, (d) => d.hospitalizedIncrease),
-      deathSum: d3.sum(v, (d) => d.deathIncrease),
+      positiveSum: d3.sum(v, (d) => d.positiveIncrease),
+      negativeSum: d3.sum(v, (d) => d.negativeIncrease),
+      // deathSum: d3.sum(v, (d) => d.deathIncrease),
     }),
     (d) => d.state
   );
@@ -51,7 +51,7 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
       groups.push(state);
     });
   } else {
-    let sorted_counts = d3.sort(grouped_data, (row) => row[1].recoveredSum);
+    let sorted_counts = d3.sort(grouped_data, (row) => row[1].positiveSum);
 
     d3.select("#bar-heading").text(
       `Top 10 States Positive vs Hospitalized vs Death`
@@ -107,10 +107,7 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
     .call(d3.axisBottom(x).tickSizeOuter(0));
 
   // Add Y axis
-  let y_max = d3.max(
-    bar_data,
-    (d) => d.recoveredSum + d.deathSum + d.hospitalizedSum
-  );
+  let y_max = d3.max(bar_data, (d) => d.positiveSum + d.negativeSum);
   const y = d3.scaleLinear().domain([0, y_max]).range([height, 0]);
   svg.append("g").attr("id", "bar-y-axis").call(d3.axisLeft(y));
 
@@ -162,17 +159,12 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
     .style("border-radius", "5px")
     .style("padding", "10px");
 
-  // Three function that change the tooltip when user hover / move / leave a cell
-  // Three function that change the tooltip when user hover / move / leave a cell
   const mouseover = function (e, d) {
     const subgroupName = d3.select(this.parentNode).datum().key;
     const subgroupValue = d.data[subgroupName];
 
     const [xCoordinates, yCoordinates] = d3.pointer(e, this);
 
-    console.log(xCoordinates, yCoordinates);
-
-    console.log("mouseover", subgroupName, subgroupValue);
     tooltip
       .style("display", "block")
       .html(
@@ -180,7 +172,7 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
           subgroupName +
           "<br>" +
           "<strong>Value: </strong>" +
-          subgroupValue
+          subgroupValue.toLocaleString("us-en")
       )
       .style("opacity", 1);
   };
