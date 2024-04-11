@@ -3,7 +3,7 @@ import * as d3 from "d3";
 
 let legend, x, y, svg, width, height, states_to_index;
 const color = d3.scaleOrdinal(d3.schemeCategory10);
-const margin = { top: 40, right: 30, bottom: 40, left: 50 };
+const margin = { top: 40, right: 30, bottom: 40, left: 30};
 let data_by_state;
 
 const ten_colors = [
@@ -24,51 +24,53 @@ const ten_colors = [
 export const create_scatter_plot = (filtered_data: CSVTypes[]) => {
   const scatter_plot = d3.selectAll("#scatter");
   let grouped_data = d3.group(filtered_data, (d) => d.state);
+
+  console.log('grouped data', grouped_data);
+
   // @ts-ignore
   const container = scatter_plot.node().getBoundingClientRect();
+
   // const width = 740 - margin.left - margin.right;
   const height = 500 - margin.top - margin.bottom;
   const width = container.width - margin.left - margin.right;
-  const xDomain = d3.extent(filtered_data, (d) => d.date);
-  const x = d3.scaleLinear().domain(xDomain).range([0, width]);
-  const yDomain = d3.extent(filtered_data, (d) => d.positive);
-  const y = d3.scaleLinear().domain(yDomain).range([height, 0]);
-  const xAxis = d3.axisBottom(x);
-  const yAxis = d3.axisLeft(y);
+
+  // Create X and Y scales
+  const x = d3.scaleTime()
+  .domain(d3.extent(filtered_data, d => d.date))
+  .range([0, width]);
+
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(filtered_data, d => d.positive)])
+    .range([height, 0]);
+
   const svg = scatter_plot
     .append("svg")
-    .append("g")
-    .attr("class", "x-axis")
-    .attr("transform", `translate(${margin.left}, ${height - margin.bottom})`);
-  svg
-    .select("x-axis")
-    .append("g")
-    .call(xAxis.ticks(5).tickFormat((d) => d));
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
 
-  // console.log("grouped_data", grouped_data);
-  // legends
-  // legend = d3.select(".legend-3");
-  // legend
-  //   .style("display", "flex")
-  //   .style("flex-wrap", "wrap")
-  //   .style("gap", "5px")
-  //   .style("margin-inline", "5px");
-  // legend.selectAll("div").remove();
-  // const legends = legend
-  //   .selectAll("div")
-  //   .data(data_by_state, (row, idx) => row[0])
-  //   .enter()
-  //   .append("div")
-  //   .style("display", "flex")
-  //   .style("align-items", "center");
-  // const getColors = (state) => {
-  //   return ten_colors[states_to_index[state[0].toString()]];
-  // };
-  // const color_legends = legends
-  //   .append("div")
-  //   .style("width", "10px")
-  //   .style("height", "10px")
-  //   .style("margin-right", "5px")
-  //   .style("background-color", (state) => getColors(state));
-  // legends.append("span").text((state) => state[0]);
+  svg
+    .append("g")
+    .attr('class', "x-axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+  svg
+  .append('g')
+  .attr('class', 'y-axis')
+    .call(d3.axisLeft(y))
+
+   // Add dots
+   svg.selectAll('g')
+   .data(grouped_data)
+   .enter()
+   .append('g')
+   .selectAll("circle")
+   .data((d) => d[1])
+   .enter()
+   .append('circle')
+    .attr("cx", (d) => x(d.date))
+    .attr("cy", (d) => y(d.positive))
+    .attr("r", 1.5)
+    .style("fill", "#69b3a2")
+
 };
