@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { HEIGHT, STATES_TO_COLORS } from "./constants";
 import { getKStates } from "./functions";
 
-let svg;
+let svg, data_by_state;
 const margin = { top: 40, right: 30, bottom: 40, left: 50 };
 
 // positive test cases per state
@@ -17,17 +17,25 @@ export const create_scatter_plot = (
 
   let counts_of_positive_per_state = d3.rollup(
     filtered_data,
-    (v) => d3.sum(v, (d) => d.hospitalizedIncrease || 0),
+    (v) => d3.sum(v, (d) => d.hospitalizedCurrently || 0),
     (d) => d.state
   );
 
   // hospital, may, md
 
-  const data_by_state = getKStates(
-    slider_value,
-    counts_of_positive_per_state,
-    grouped_data
-  );
+  data_by_state = [];
+  if (grouped_data.size === 1) {
+    grouped_data.forEach((val, state) => {
+      // console.log("state", state, "vall", val);
+      data_by_state.push([state, val]);
+    });
+  } else {
+    data_by_state = getKStates(
+      slider_value,
+      counts_of_positive_per_state,
+      grouped_data
+    );
+  }
 
   // @ts-ignore
   const container = scatter_plot.node().getBoundingClientRect();
@@ -47,7 +55,7 @@ export const create_scatter_plot = (
   data_by_state.forEach(([state, array], idx) => {
     maxY = Math.max(
       maxY,
-      d3.max(array, (d) => d.hospitalized)
+      d3.max(array, (d) => d.hospitalizedCurrently)
     );
   });
 
@@ -96,7 +104,7 @@ export const create_scatter_plot = (
     tooltip
       .html(
         `<strong>State: </strong>${d.state} <br>
-         <strong>Hospitalized: </strong>${d.hospitalized.toLocaleString(
+         <strong>Hospitalized Currently: </strong>${d.hospitalizedCurrently.toLocaleString(
            "us-en"
          )}`
       )
@@ -122,11 +130,13 @@ export const create_scatter_plot = (
     .attr("class", "circles")
     .selectAll("circles")
     .data((d) =>
-      d[1].filter((item) => item.hospitalized && item.hospitalized !== 0)
+      d[1].filter(
+        (item) => item.hospitalizedCurrently && item.hospitalizedCurrently !== 0
+      )
     )
     .join("circle")
     .attr("cx", (d) => x(d.date))
-    .attr("cy", (d) => y(d.hospitalized))
+    .attr("cy", (d) => y(d.hospitalizedCurrently))
     .attr("r", 5)
     .style("fill", (d) => STATES_TO_COLORS[d.state])
     .style("opacity", 0.5)

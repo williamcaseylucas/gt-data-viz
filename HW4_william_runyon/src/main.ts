@@ -119,7 +119,7 @@ csv_data.then((data) => {
 
   YEARS.forEach((year) => {
     let li = document.createElement("li");
-    console.log("year", year);
+    // console.log("year", year);
     li.textContent = year;
 
     if (year == 2020) {
@@ -141,6 +141,11 @@ csv_data.then((data) => {
   // add event listener to each li
   li.addEventListener("click", () => {
     selectedRegion = li.textContent;
+
+    if (selectedRegion === "All Regions") {
+      d3.select(".slider").property("value", "5");
+      slider_value = 5;
+    }
     refocus_center(map, selectedRegion);
     getFilteredData(data);
   });
@@ -152,15 +157,19 @@ csv_data.then((data) => {
     let li = document.createElement("li");
     li.textContent = state;
 
-    // add event listener to each li
+    // // add event listener to each li
     li.addEventListener("click", () => {
       selectedRegion = li.textContent;
+
+      if (selectedRegion !== "All Regions") {
+        d3.select(".slider").property("value", "1");
+        slider_value = 1;
+      }
       refocus_center(map, selectedRegion);
       getFilteredData(data);
     });
     regions.appendChild(li);
   });
-
   // Updates UI
   // Loop through all dropdown elements
   dropdowns.forEach((dropdown) => {
