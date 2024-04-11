@@ -44,7 +44,7 @@ export interface CSVTypes {
 
 export interface BAR_DATA {
   state: string;
-  positiveSum: number;
-  hospitalizeSum: number;
+  recoveredSum: number;
+  hospitalizedSum: number;
   deathSum: number;
 }

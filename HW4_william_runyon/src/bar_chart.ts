@@ -15,10 +15,10 @@ const margin = {
   left: 75,
 };
 
-const colors = ["#e41a1c", "#377eb8", "#4daf4a"];
+const colors = ["#C7EFCF", "#FE5F55", "#000000"];
 
 const label_to_color = {
-  positiveSum: colors[0],
+  recoveredSum: colors[0],
   hospitalizeSum: colors[1],
   deathSum: colors[2],
 };
@@ -26,7 +26,7 @@ const label_to_color = {
 export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   const bar_chart = d3.selectAll("#bar");
 
-  const bar_data: BAR_DATA[] = []; //{state: 'CA', positiveSum: 53417, hospitalizeSum: 0, deathSum: 1081}
+  const bar_data: BAR_DATA[] = []; //{state: 'CA', recoveredSum: 53417, hospitalizeSum: 0, deathSum: 1081}
   let groups = [];
   let subgroups;
 
@@ -34,8 +34,8 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   let grouped_data = d3.rollup(
     filtered_data,
     (v) => ({
-      positiveSum: d3.sum(v, (d) => d.positiveIncrease),
-      hospitalizeSum: d3.sum(v, (d) => d.hospitalizedIncrease),
+      recoveredSum: d3.sum(v, (d) => d.recovered),
+      hospitalizedSum: d3.sum(v, (d) => d.hospitalizedIncrease),
       deathSum: d3.sum(v, (d) => d.deathIncrease),
     }),
     (d) => d.state
@@ -51,7 +51,7 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
       groups.push(state);
     });
   } else {
-    let sorted_counts = d3.sort(grouped_data, (row) => row[1].positiveSum);
+    let sorted_counts = d3.sort(grouped_data, (row) => row[1].recoveredSum);
 
     d3.select("#bar-heading").text(
       `Top 10 States Positive vs Hospitalized vs Death`
@@ -109,7 +109,7 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   // Add Y axis
   let y_max = d3.max(
     bar_data,
-    (d) => d.positiveSum + d.deathSum + d.hospitalizeSum
+    (d) => d.recoveredSum + d.deathSum + d.hospitalizedSum
   );
   const y = d3.scaleLinear().domain([0, y_max]).range([height, 0]);
   svg.append("g").attr("id", "bar-y-axis").call(d3.axisLeft(y));
@@ -186,9 +186,9 @@ export const create_bar_chart = (filtered_data: CSVTypes[]) => {
   };
   const mousemove = function (e, d) {
     tooltip
-      .style("transform", "translateY(-60%)")
+      .style("transform", "translateY(-40%)")
       .style("left", e.x / 2 + "px")
-      .style("top", e.y / 2 - 30 + "px");
+      .style("top", e.y / 4 - 10 + "px");
   };
   const mouseleave = function (e, d) {
     tooltip.style("opacity", 0);
