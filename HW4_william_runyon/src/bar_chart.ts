@@ -11,7 +11,7 @@ let svg;
 const margin = {
   top: 20,
   right: 50,
-  bottom: 40,
+  bottom: 50,
   left: 75,
 };
 

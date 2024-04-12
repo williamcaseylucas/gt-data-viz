@@ -39,7 +39,7 @@ h1 {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2em;
+  grid-gap: 2em;
   align-items: center;
 }
 
@@ -53,10 +53,11 @@ h1 {
   /* padding-bottom: 50px; */
 }
 /* keep working on */
-.chart-container {
+/* .chart-container {
   width: 350px;
   height: 350px;
-}
+} */
+.chart-container,
 .map-container {
   flex: 1;
   position: relative;
@@ -116,6 +117,7 @@ h1 {
 #legend {
   font-size: 20px;
   font-weight: 600;
+  height: 30px;
 }
 
 .top-bar {
