@@ -30,6 +30,10 @@ body {
   margin-inline: auto;
 }
 
+h1 {
+  margin-block: 1px;
+}
+
 .main-content {
   width: 100%;
   display: grid;
@@ -44,8 +48,8 @@ body {
   flex-direction: column;
   position: relative;
   border-radius: 10px;
-  height: 500px;
-  padding-bottom: 50px;
+  height: 530px;
+  /* padding-bottom: 50px; */
 }
 
 .chart-container,
