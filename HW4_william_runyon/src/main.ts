@@ -73,14 +73,10 @@ const getFilteredData = (data: CSVTypes[]): CSVTypes[] => {
   });
 
   // update these
-  d3.select("#positive").text(
-    `Positive this month: ${stats.totalPostive.toLocaleString("en-US")}`
-  );
-  d3.select("#death").text(
-    `Died this month: ${stats.totalDied.toLocaleString("en-US")}`
-  );
+  d3.select("#positive").text(`${stats.totalPostive.toLocaleString("en-US")}`);
+  d3.select("#death").text(`${stats.totalDied.toLocaleString("en-US")}`);
   d3.select("#recovered").text(
-    `Recovered this month: ${stats.totalRecovered.toLocaleString("en-US")}`
+    `${stats.totalRecovered.toLocaleString("en-US")}`
   );
   console.log("filteredData", filteredData);
 

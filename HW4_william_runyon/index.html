@@ -39,13 +39,25 @@
             </div>
           </div>
 
-          <div class="label" id="positive">Positive this month: 0</div>
-          <div class="label" id="death">Died this month: 0</div>
-          <div class="label" id="recovered">Recovered this month: 0</div>
+          <div class="labels">
+            <div class="label-container">
+              <div class="label">Positive this month:</div>
+              <span id="positive">0</span>
+            </div>
+            <div class="label-container">
+              <div class="label">Died this month:</div>
+              <span id="death">0</span>
+            </div>
+            <div class="label-container">
+              <div class="label">Recovered this month:</div>
+              <span id="recovered">0</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="top-bar-container">
         <div class="slidecontainer">
+          <p>0</p>
           <input
             type="range"
             min="1"
@@ -54,6 +66,7 @@
             class="slider"
             id="myRange"
           />
+          <p>10</p>
         </div>
       </div>
       <!-- grid -->
