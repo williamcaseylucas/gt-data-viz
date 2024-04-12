@@ -6,15 +6,52 @@
 - [ ] Users can explore and analyze the data from multiple analytical perspectives
 - [ ] Number of tasks should be performable
 
-## Notes
+## Notes (for self)
 
 - to run .ts
   - npx tsx ./src/getCsvData.ts
+
+## TODO
+
+- [ ] update state name with each chart
+- [ ] add x and y label to each chart
+- [ ] finish README doc
+
+## For TA
+
+- I am getting my csv data by grabbing it from a backend source, to run these in tandem please do the following
+  - cd backend
+  - npm install
+  - cd ..
+  - npm install
+  - npm run dev (from root folder)
 
 #### Points
 
 1. Data: understand your data well
    1. What are the attributes?
+   - The attributes used in this project consist of
+     - For the top tool bar that shows positive, died, and recovered
+       - recovered
+       - deathIncrease
+       - positiveIncrease
+     - The map
+       - latitude and longitude of each state (supplemented by scraping web page online)
+       - positiveIncrease
+       - state
+     - The line chart
+       - deathIncrease
+       - date
+       - state (for grouping)
+     - The bar chart
+       - positiveIncrease
+       - negativeIncrease
+       - positiveSum (generated value)
+       - negativeSum (generated value)
+       - state (for grouping)
+     - The scatter plot
+       - hospitalizedCurrently
+       - state (for grouping)
    2. What are the relationships among these attributes?
    3. What insights can they provide?
 2. Task: think about the kinds of questions someone might have about the data and the kinds of insights they’d want to take away

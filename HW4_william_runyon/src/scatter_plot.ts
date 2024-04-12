@@ -154,6 +154,8 @@ export const create_scatter_plot = (
     .style("gap", "5px")
     .style("margin-inline", "5px");
 
+  console.log("scatter data", data_by_state);
+
   legend.selectAll("div").remove();
   const legends = legend
     .selectAll("div")
