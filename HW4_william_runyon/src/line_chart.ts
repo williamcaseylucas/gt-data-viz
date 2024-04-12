@@ -33,7 +33,11 @@ export const create_line_chart = (
       d3.select("#lines-heading").text(`COVID Deaths in ${state}`);
     });
   } else {
-    d3.select("#lines-heading").text(`Top 10 States with COVID Deaths`);
+    const sliderVal = +d3.select(".slider").property("value");
+
+    d3.select("#lines-heading").text(
+      `Top ${sliderVal} States with COVID Deaths`
+    );
     // group by state but get sum of each
     let counts_of_deaths_per_state = d3.rollup(
       filtered_data,
@@ -179,6 +183,27 @@ export const create_line_chart = (
     });
   svg.select("#y-axis").remove();
   svg.select("#x-axis").remove();
+  d3.select(".line-x-axis-label").remove();
+  d3.select(".line-y-axis-label").remove();
+
+  // x axis text label
+  svg
+    .append("text")
+    .attr("class", "line-x-axis-label")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height + 35)
+    .text("Day of the month");
+
+  // y axis text label
+  svg
+    .append("text")
+    .attr("class", "line-y-axis-label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("People Affected");
 
   // x axis
   svg

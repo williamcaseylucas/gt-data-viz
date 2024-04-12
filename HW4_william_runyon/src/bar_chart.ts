@@ -63,7 +63,10 @@ export const create_bar_chart = (
         bar_data.push({ state: key, ...data });
         groups.push(key);
       });
-    d3.select("#bar-heading").text(`Top 10 States Positive vs Negative`);
+    const sliderVal = +d3.select(".slider").property("value");
+    d3.select("#bar-heading").text(
+      `Top ${sliderVal} Most Positive Tests (Positive vs Negative) by State`
+    );
   }
 
   // console.log(bar_data, "groups", groups, "subgroups", subgroups);
@@ -95,6 +98,27 @@ export const create_bar_chart = (
 
   svg.select("#bar-x-axis").remove();
   svg.select("#bar-y-axis").remove();
+  d3.select(".bar-x-axis-label").remove();
+  d3.select(".bar-y-axis-label").remove();
+
+  // x axis text label
+  svg
+    .append("text")
+    .attr("class", "bar-x-axis-label")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height + 20)
+    .text("State");
+
+  // y axis text label
+  svg
+    .append("text")
+    .attr("class", "bar-y-axis-label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("People Affected");
 
   svg
     .append("g")

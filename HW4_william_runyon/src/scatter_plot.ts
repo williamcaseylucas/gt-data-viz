@@ -27,9 +27,14 @@ export const create_scatter_plot = (
   if (grouped_data.size === 1) {
     grouped_data.forEach((val, state) => {
       // console.log("state", state, "vall", val);
+      d3.select("#scatter-heading").text(`Hospitalization for ${state}`);
       data_by_state.push([state, val]);
     });
   } else {
+    const sliderVal = +d3.select(".slider").property("value");
+    d3.select("#scatter-heading").text(
+      `Top ${sliderVal} Most Hospitalizations by State`
+    );
     data_by_state = getKStates(
       slider_value,
       counts_of_positive_per_state,
@@ -73,6 +78,27 @@ export const create_scatter_plot = (
 
   d3.select(".x-axis").remove();
   d3.select(".y-axis").remove();
+  d3.select(".scatter-x-axis-label").remove();
+  d3.select(".scatter-y-axis-label").remove();
+
+  // x axis text label
+  svg
+    .append("text")
+    .attr("class", "scatter-x-axis-label")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height + 35)
+    .text("Date");
+
+  // y axis text label
+  svg
+    .append("text")
+    .attr("class", "scatter-y-axis-label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("People Affected");
 
   svg
     .append("g")
@@ -112,12 +138,10 @@ export const create_scatter_plot = (
       .style("top", `${yCoordinates + 50}px`);
   };
 
-  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
   const mouseleave = function (e, d) {
     tooltip.transition().duration(200).style("opacity", 0);
   };
 
-  // Add dots
   svg
     .selectAll(".circles")
     .append("g")
