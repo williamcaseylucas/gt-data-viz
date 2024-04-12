@@ -23,6 +23,7 @@ body {
   /* background-color: #26489a; */
   border-radius: 10px;
   margin-bottom: 10px;
+
   /* padding-inline: 5px; */
 }
 
@@ -48,11 +49,14 @@ h1 {
   flex-direction: column;
   position: relative;
   border-radius: 10px;
-  height: 530px;
+  height: 560px;
   /* padding-bottom: 50px; */
 }
-
-.chart-container,
+/* keep working on */
+.chart-container {
+  width: 350px;
+  height: 350px;
+}
 .map-container {
   flex: 1;
   position: relative;
