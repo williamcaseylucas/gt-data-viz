@@ -15,10 +15,6 @@ interface State_Vals {
     positive_cases: number;
   };
 }
-
-// For other events
-const zoom = 5;
-
 // Leaflet
 export const createMap = () => {
   // because of #map
@@ -44,7 +40,7 @@ export const addContentToCircle = (circle, state, content, map) => {
     // map.flyTo([coordinates.lat, coordinates.lng], zoom);
     circle.openPopup();
   });
-  circle.on("mouseout", (ev) => {
+  circle.on("mouseout", () => {
     // @ts-ignore
     circle.closePopup();
   });
@@ -84,6 +80,7 @@ export const recreate_circles = (
   // Create circles
   Object.entries(states_vals).forEach((entry) => {
     const [state, vals] = entry;
+    // @ts-ignore
     const { positive_cases } = vals;
 
     const { lat, lon } = STATES_LAT_LON[state];

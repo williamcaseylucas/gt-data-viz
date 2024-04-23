@@ -8,18 +8,19 @@ export const getKStates = (k, filtered_array, original_array) => {
   sorted_counts
     .slice(1)
     .slice(-k)
-    .forEach((val, state) => top_k_states.add(val[0]));
+    .forEach((val, _) => top_k_states.add(val[0]));
   // console.log("get_k_states", sorted_counts);
 
   let i = 0;
   const states_to_index = {};
   top_k_states.forEach((state) => {
+    // @ts-ignore
     states_to_index[state] = i;
     i += 1;
   });
 
   // console.log('top_10_states', top_10_states);
-
+  // @ts-ignore
   original_array.forEach((vals, state) => {
     if (top_k_states.has(state)) {
       data_by_state.push([state, vals]);

@@ -2,7 +2,6 @@
 
 // hospitalized, death, positive
 
-import { HEIGHT } from "./constants";
 import { BAR_DATA, CSVTypes } from "./interfaces";
 import * as d3 from "d3";
 
@@ -48,6 +47,7 @@ export const create_bar_chart = (
     grouped_data.forEach((row, state) => {
       d3.select("#bar-heading").text(`Positive vs Negative ${state}`);
       subgroups = Object.keys(row);
+      // @ts-ignore
       bar_data.push({ state, ...row });
       groups.push(state);
     });
@@ -57,9 +57,10 @@ export const create_bar_chart = (
     sorted_counts
       .slice(1)
       .slice(-slider_value)
-      .forEach((val, idx) => {
+      .forEach((val, _) => {
         const [key, data] = val;
         subgroups = Object.keys(data);
+        // @ts-ignore
         bar_data.push({ state: key, ...data });
         groups.push(key);
       });
@@ -94,6 +95,7 @@ export const create_bar_chart = (
   }
 
   // // Add X axis
+  // @ts-ignore
   const x = d3.scaleBand().domain(groups).range([0, width]).padding([0.2]);
 
   svg.select("#bar-x-axis").remove();
@@ -134,6 +136,7 @@ export const create_bar_chart = (
   // color palette = one color per subgroup
   const color = d3.scaleOrdinal().domain(subgroups).range(colors);
 
+  // @ts-ignore
   const stackedData = d3.stack().keys(subgroups)(bar_data);
 
   // Add the legend
@@ -176,12 +179,13 @@ export const create_bar_chart = (
     .style("border-width", "1px")
     .style("border-radius", "5px")
     .style("padding", "10px");
-
+  // @ts-ignore
   const mouseover = function (e, d) {
+    // @ts-ignore
     const subgroupName = d3.select(this.parentNode).datum().key;
     const subgroupValue = d.data[subgroupName];
 
-    const [xCoordinates, yCoordinates] = d3.pointer(e, this);
+    // const [xCoordinates, yCoordinates] = d3.pointer(e, this);
 
     tooltip
       .style("display", "block")
@@ -194,12 +198,14 @@ export const create_bar_chart = (
       )
       .style("opacity", 1);
   };
+  // @ts-ignore
   const mousemove = function (e, d) {
     tooltip
       .style("transform", "translateY(-40%)")
       .style("left", e.x / 2 + "px")
       .style("top", e.y / 4 - 10 + "px");
   };
+  // @ts-ignore
   const mouseleave = function (e, d) {
     tooltip.style("opacity", 0);
     tooltip.style("display", "none");

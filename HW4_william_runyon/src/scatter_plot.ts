@@ -1,6 +1,6 @@
 import { CSVTypes } from "./interfaces";
 import * as d3 from "d3";
-import { HEIGHT, STATES_TO_COLORS } from "./constants";
+import { STATES_TO_COLORS } from "./constants";
 import { getKStates } from "./functions";
 
 let svg, data_by_state;
@@ -57,10 +57,11 @@ export const create_scatter_plot = (
     .range([0, width]);
 
   let maxY = 0;
-  data_by_state.forEach(([state, array], idx) => {
+  // state
+  data_by_state.forEach(([_, array]) => {
     maxY = Math.max(
       maxY,
-      d3.max(array, (d) => d.hospitalizedCurrently)
+      +d3.max(array, (d: CSVTypes) => d.hospitalizedCurrently)
     );
   });
 
@@ -120,10 +121,12 @@ export const create_scatter_plot = (
     .style("border-radius", "5px")
     .style("padding", "10px");
 
+  // @ts-ignore
   const mouseover = function (e, d) {
     tooltip.style("opacity", 1).style("display", "block");
   };
 
+  // @ts-ignore
   const mousemove = function (e, d) {
     const [xCoordinates, yCoordinates] = d3.pointer(e, this);
 
@@ -137,7 +140,7 @@ export const create_scatter_plot = (
       .style("left", `${xCoordinates + 50}px`)
       .style("top", `${yCoordinates + 50}px`);
   };
-
+  // @ts-ignore
   const mouseleave = function (e, d) {
     tooltip.transition().duration(200).style("opacity", 0);
   };
@@ -183,7 +186,7 @@ export const create_scatter_plot = (
   legend.selectAll("div").remove();
   const legends = legend
     .selectAll("div")
-    .data(data_by_state, (row, idx) => row[0])
+    .data(data_by_state, (row, _) => row[0])
     .enter()
     .append("div")
     .style("display", "flex")
@@ -192,7 +195,7 @@ export const create_scatter_plot = (
     .style("margin-inline", "auto")
     .attr("class", "legend");
 
-  const color_legends = legends
+  legends
     .append("div")
     .style("width", "10px")
     .style("height", "10px")

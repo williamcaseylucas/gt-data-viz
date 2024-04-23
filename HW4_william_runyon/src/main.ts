@@ -1,13 +1,12 @@
 import "./style.css";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
 import {
   createMap,
   recreate_circles,
   refocus_center,
 } from "./leaflet_functions";
 import csv_data from "./getData";
-import { MONTHS, YEARS, STATES_LAT_LON } from "./constants";
+import { MONTHS, YEARS } from "./constants";
 import * as d3 from "d3";
 import { CSVTypes } from "./interfaces";
 import * as line_chart from "./line_chart.ts";
@@ -95,7 +94,7 @@ csv_data.then((data) => {
     getFilteredData(data);
   });
 
-  const filteredData = getFilteredData(data);
+  getFilteredData(data);
 
   MONTHS.forEach((month) => {
     let li = document.createElement("li");
@@ -116,7 +115,7 @@ csv_data.then((data) => {
   YEARS.forEach((year) => {
     let li = document.createElement("li");
     // console.log("year", year);
-    li.textContent = year;
+    li.textContent = year.toString();
 
     if (year == 2020) {
       li.classList.add("active");

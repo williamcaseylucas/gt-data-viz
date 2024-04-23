@@ -1,6 +1,6 @@
 import { CSVTypes } from "./interfaces";
 import * as d3 from "d3";
-import { HEIGHT, STATES_TO_COLORS } from "./constants";
+import { STATES_TO_COLORS } from "./constants";
 import { getKStates } from "./functions";
 
 let legend, x, y, svg, width, height, states_to_index;
@@ -10,8 +10,11 @@ let data_by_state;
 // line generator
 const line = d3
   .line()
+  // @ts-ignore
   .defined((d) => d.deathIncrease != null)
+  // @ts-ignore
   .x((d) => x(d.date))
+  // @ts-ignore
   .y((d) => y(d.deathIncrease));
 
 export const create_line_chart = (
@@ -21,7 +24,7 @@ export const create_line_chart = (
   const line_chart = d3.selectAll("#lines");
   let grouped_data = d3.group(filtered_data, (d) => d.state);
 
-  console.log("line chart grouped_data", grouped_data);
+  // console.log("line chart grouped_data", grouped_data);
 
   if (grouped_data.size === 1) {
     data_by_state = [];
@@ -51,7 +54,7 @@ export const create_line_chart = (
       grouped_data
     );
   }
-  console.log("data_by_state", data_by_state);
+  console.log("data_by_state line chart", data_by_state);
 
   // @ts-ignore
   const container = line_chart.node().getBoundingClientRect();
@@ -77,6 +80,7 @@ export const create_line_chart = (
     const data_array = state[1];
     max_y = Math.max(
       max_y,
+      // @ts-ignore
       d3.max(data_array, (d) => d.deathIncrease || 0)
     );
   });
@@ -101,7 +105,7 @@ export const create_line_chart = (
   legend.selectAll("div").remove();
   const legends = legend
     .selectAll("div")
-    .data(data_by_state, (row, idx) => row[0])
+    .data(data_by_state, (row, _) => row[0])
     .enter()
     .append("div")
     .style("display", "flex")
@@ -109,7 +113,7 @@ export const create_line_chart = (
     .style("margin-inline", "auto")
     .attr("class", "legend");
 
-  const color_legends = legends
+  legends
     .append("div")
     .style("width", "10px")
     .style("height", "10px")
@@ -133,17 +137,17 @@ export const create_line_chart = (
   // actual data
   svg
     .selectAll(".line")
-    .data(data_by_state, (state, idx) => state)
+    .data(data_by_state, (state, _) => state)
     .join(
       (enter) =>
         enter
           .append("path")
           .attr("class", "line")
           .attr("fill", "none")
-          .attr("stroke", (state, idx) => STATES_TO_COLORS[state[0]])
+          .attr("stroke", (state, _) => STATES_TO_COLORS[state[0]])
           .attr("stroke-width", 2)
-          .attr("d", (row, idx) => {
-            console.log("row from line_chart", row[1]);
+          .attr("d", (row, _) => {
+            // console.log("row from line_chart", row[1]);
             return line(row[1]);
           }),
       (update) =>
@@ -151,9 +155,11 @@ export const create_line_chart = (
           .transition()
           .duration(1000)
           .ease(d3.easeLinear)
-          .attr("d", (row, idx) => line(row[1]))
+          .attr("d", (row, _) => line(row[1]))
     )
+    // @ts-ignore
     .on("mouseover", (e, data, i) => {
+      // @ts-ignore
       const [state, d] = data;
       const [xCoordinates, yCoordinates] = d3.pointer(e, this);
       circle
@@ -165,7 +171,24 @@ export const create_line_chart = (
 
       const x0 = x.invert(xCoordinates); // gives date
 
-      const data_from_date = d.find((row) => row.date.getDay() === x0.getDay());
+      console.log(`x0 val ${x0}`);
+
+      // const data_from_date = d.find((row) => row.date.getDay() === x0.getDay());
+      let data_from_date;
+      data_by_state.forEach((row) => {
+        if (row[0] === state) {
+          console.log("row[1]", row[1]);
+          const date = row[1].find((r) => {
+            return r.date.getDate() === x0.getDate();
+          });
+
+          if (data != null) {
+            data_from_date = date;
+            return;
+          }
+        }
+      });
+      console.log(`dat_from_date:`, data_from_date);
       // console.log(data_from_date.state, data_from_date.death);
 
       tooltip
@@ -177,7 +200,7 @@ export const create_line_chart = (
           `<strong>State: </strong> ${data_from_date.state}<br><strong>Death: </strong> ${data_from_date.deathIncrease}`
         );
     })
-    .on("mouseout", (e, data, i) => {
+    .on("mouseout", () => {
       circle.style("opacity", 0);
       tooltip.style("display", "none");
     });
