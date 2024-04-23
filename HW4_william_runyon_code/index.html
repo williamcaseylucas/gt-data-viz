@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+
+  <body>
+    <div class="app">
+      <!-- Top bar -->
+      <div class="top-bar-container">
+        <div class="top-bar">
+          <div class="buttons">
+            <div class="dropdown" id="months">
+              <h4 class="dropdown-title">Month</h4>
+              <div class="select">
+                <div class="selected">MAR</div>
+                <div class="caret"></div>
+              </div>
+              <ul class="menu"></ul>
+            </div>
+            <div class="dropdown" id="years">
+              <h4 class="dropdown-title">Year</h4>
+              <div class="select">
+                <div class="selected">2020</div>
+                <div class="caret"></div>
+              </div>
+              <ul class="menu"></ul>
+            </div>
+            <div class="dropdown" id="regions">
+              <h4 class="dropdown-title">Region(s)</h4>
+              <div class="select">
+                <div class="selected">All Regions</div>
+                <div class="caret"></div>
+              </div>
+              <ul class="menu"></ul>
+            </div>
+          </div>
+
+          <div class="labels">
+            <div class="label-container">
+              <div class="label">All Positive Cases This Month:</div>
+              <span id="positive">0</span>
+            </div>
+            <div class="label-container">
+              <div class="label">All Death This Month:</div>
+              <span id="death">0</span>
+            </div>
+            <div class="label-container">
+              <div class="label">All Recovered This Month:</div>
+              <span id="recovered">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="top-bar-container">
+        <div class="slidecontainer">
+          <p class="slider-label">1 State</p>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value="5"
+            class="slider"
+            id="myRange"
+          />
+          <p class="slider-label">10 States</p>
+        </div>
+      </div>
+      <!-- grid -->
+      <div class="main-content">
+        <div class="display-cell">
+          <div class="heading">
+            <h1 id="map-heading">Positive Cases</h1>
+          </div>
+          <div class="map-container">
+            <div id="map"></div>
+          </div>
+        </div>
+        <div class="display-cell">
+          <div class="heading">
+            <h1 id="lines-heading">Top 10 Most Deaths by State</h1>
+          </div>
+          <div class="chart-container" id="lines"></div>
+          <div class="legend-1" id="legend"></div>
+        </div>
+        <div class="display-cell">
+          <div class="heading">
+            <h1 id="bar-heading">FILL IN</h1>
+          </div>
+          <div class="chart-container" id="bar"></div>
+          <div class="legend-2" id="legend"></div>
+        </div>
+        <div class="display-cell">
+          <div class="heading">
+            <h1 id="scatter-heading">Top 10 Most Hospitalization by State</h1>
+          </div>
+          <div class="chart-container" id="scatter"></div>
+          <div class="legend-3" id="legend"></div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
